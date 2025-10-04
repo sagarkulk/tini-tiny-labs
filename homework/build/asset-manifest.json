@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/tini-tiny-labs/static/css/main.3beefdba.css",
+    "main.js": "/tini-tiny-labs/static/js/main.8565ea95.js",
+    "index.html": "/tini-tiny-labs/index.html",
+    "main.3beefdba.css.map": "/tini-tiny-labs/static/css/main.3beefdba.css.map",
+    "main.8565ea95.js.map": "/tini-tiny-labs/static/js/main.8565ea95.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3beefdba.css",
+    "static/js/main.8565ea95.js"
+  ]
+}

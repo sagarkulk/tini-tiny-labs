@@ -1,26 +1,39 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Mathematics from "./Mathematics.js";
+import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
+import Home from "./components/Home";
+import Mathematics from "./components/Mathematics";
+import "./App.css";
 
 export default function App() {
   return (
-    <Router>
-      <div style={{ textAlign: "center", marginTop: 20 }}>
-        <h1>Homework App</h1>
-        <nav style={{ marginBottom: 20 }}>
-          <Link to="/" style={{ marginRight: 20 }}>Home</Link>
-          <Link to="/mathematics">Mathematics</Link>
-        </nav>
+    <BrowserRouter basename="/tini-tiny-labs">
+      <div className="app-shell">
+        <header className="app-header">
+          <div className="header-inner">
+            <h1 className="brand">Tini-Tiny Labs</h1>
+            <nav className="nav">
+              <Link to="/Homework">Home</Link>
+              <Link to="/Homework/Mathematics">Mathematics</Link>
+            </nav>
+          </div>
+        </header>
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/mathematics" element={<Mathematics />} />
-        </Routes>
+        <main className="app-main">
+          <Routes>
+            {/* redirect repo root to /Homework */}
+            <Route path="/" element={<Navigate to="/Homework" replace />} />
+            <Route path="/Homework" element={<Home />} />
+            <Route path="/Homework/Mathematics" element={<Mathematics />} />
+            <Route path="*" element={<div style={{ padding: 16 }}>404 Not Found</div>} />
+          </Routes>
+        </main>
+
+        <footer className="app-footer">
+          <div className="footer-inner">
+            <p>© {new Date().getFullYear()} Tini-Tiny Labs</p>
+          </div>
+        </footer>
       </div>
-    </Router>
+    </BrowserRouter>
   );
-}
-
-function Home() {
-  return <p>Welcome! Choose a page above.</p>;
 }

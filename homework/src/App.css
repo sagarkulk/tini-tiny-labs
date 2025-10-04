@@ -1,36 +1,75 @@
-body {
-  font-family: "Nunito", sans-serif;
-  background-color: #f8fafc;
-  margin: 0;
-  padding: 0;
-  color: #333;
+/* ===== Fixed Layout: Header / Scrollable Body / Footer ===== */
+
+.app-shell {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+  overflow: hidden;
 }
 
-h1, h2, h3 {
+/* --- Header --- */
+.app-header {
+  background: #111827;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.brand {
+  font-size: 1.3rem;
   font-weight: 700;
+  text-decoration: none;
+  color: #fff;
+}
+.nav a {
+  color: #e5e7eb;
+  text-decoration: none;
+  margin-left: 16px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+.nav a:hover {
+  color: #fff;
 }
 
-button {
-  font-family: "Nunito", sans-serif;
-  padding: 6px 14px;
-  border-radius: 8px;
-  border: none;
-  background: #2563eb;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease;
+/* --- Main (Scrollable) --- */
+.app-main {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px;
+  background-color: #f8fafc;
 }
 
-button:hover {
-  background: #1e4ed8;
+/* --- Footer --- */
+.app-footer {
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
 }
-
-input {
-  font-family: "Nunito", sans-serif;
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 16px;
   text-align: center;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 4px;
-  font-size: 16px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 640px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .nav a {
+    margin: 0 8px 0 0;
+    display: inline-block;
+  }
 }
