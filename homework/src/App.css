@@ -101,7 +101,7 @@ body {
 .brandText{
   margin:0;
   font-size:1.15rem;
-  font-weight:800;
+  /*font-weight:800;*/
   color: var(--header-fg);
 }
 
@@ -122,7 +122,7 @@ body {
 .nav a{
   color: var(--nav-color);
   text-decoration: none;
-  font-weight: 700;
+  /*font-weight: 700;*/
   position: relative;
   padding: 6px 4px;
 }
@@ -201,7 +201,7 @@ button {
   border: none;
   background: var(--brand);
   color: #fff;
-  font-weight: 700;
+  /*font-weight: 700;*/
   cursor: pointer;
   transition: background 0.15s ease, filter .15s ease, opacity .15s ease;
 }
@@ -214,7 +214,7 @@ button:disabled { opacity: .5; cursor: not-allowed; }
   border: none;
   border-radius: 12px;
   padding: 12px 14px;
-  font-weight: 800;
+  /*font-weight: 800;*/
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   cursor: pointer;
 }
@@ -239,7 +239,7 @@ input:focus {
 .pill{
   padding:6px 12px;
   border-radius:999px;
-  font-weight:700;
+  /*font-weight:700;*/
   border:1px solid var(--divider);
   background: var(--header-bg);
   color: var(--text-color);
@@ -248,4 +248,30 @@ input:focus {
   border-color: var(--brand);
   background: color-mix(in oklab, var(--brand) 15%, transparent);
   color: var(--brand-700);
+}
+
+.footer-nav{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap: 18px;
+  margin-bottom: 6px;
+}
+
+.footer-link{
+  text-decoration:none;
+  color: var(--nav-color);
+  /*font-weight: 800;*/
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--divider);
+  background: var(--header-bg);
+}
+.footer-link:hover{
+  background: color-mix(in oklab, var(--brand) 12%, transparent);
+}
+.footer-link[aria-current="page"]{
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 10px;
 }
