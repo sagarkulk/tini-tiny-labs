@@ -1,0 +1,36 @@
+body {
+  font-family: "Nunito", sans-serif;
+  background-color: #f8fafc;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+}
+
+button {
+  font-family: "Nunito", sans-serif;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: #1e4ed8;
+}
+
+input {
+  font-family: "Nunito", sans-serif;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 4px;
+  font-size: 16px;
+}
