@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/tini-tiny-labs/static/css/main.0ebc9903.css",
-    "main.js": "/tini-tiny-labs/static/js/main.d03b1e01.js",
+    "main.js": "/tini-tiny-labs/static/js/main.b9bcab11.js",
     "index.html": "/tini-tiny-labs/index.html",
     "main.0ebc9903.css.map": "/tini-tiny-labs/static/css/main.0ebc9903.css.map",
-    "main.d03b1e01.js.map": "/tini-tiny-labs/static/js/main.d03b1e01.js.map"
+    "main.b9bcab11.js.map": "/tini-tiny-labs/static/js/main.b9bcab11.js.map"
   },
   "entrypoints": [
     "static/css/main.0ebc9903.css",
-    "static/js/main.d03b1e01.js"
+    "static/js/main.b9bcab11.js"
   ]
 }
