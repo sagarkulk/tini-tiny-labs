@@ -1,29 +1,17 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta charset="utf-8" />
-    <title>SPA Redirect</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirecting…</title>
     <script>
-        (function () {
-            // Your repo subpath
-            var base = "/tini-tiny-labs";
-            var l = window.location;
-
-            // Path after the repo segment (e.g. "/Homework/Mathematics")
-            var path = l.pathname.startsWith(base) ? l.pathname.slice(base.length) : l.pathname;
-
-            // Build redirect to index.html with hash to preserve original path
-            // BrowserRouter will mount at /tini-tiny-labs because of basename
-            var redirect = base + "/index.html#" + path + l.search + l.hash;
-
-            // Use replace so the back button behaves
-            l.replace(redirect);
-        })();
+      (function () {
+        var repo = "/tini-tiny-labs";
+        var l = window.location;
+        var path = l.pathname.startsWith(repo) ? l.pathname.slice(repo.length) : l.pathname;
+        var search = l.search ? l.search + "&" : "?";
+        l.replace(repo + "/index.html" + search + "p=" + encodeURIComponent(path) + l.hash);
+      })();
     </script>
-</head>
-
-<body></body>
-
+  </head>
+  <body></body>
 </html>
