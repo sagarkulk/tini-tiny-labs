@@ -1,75 +1,251 @@
-/* ===== Fixed Layout: Header / Scrollable Body / Footer ===== */
+html, body, #root {
+  height: 100%;
+}
 
-.app-shell {
+body {
+  font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+:root[data-theme="light"]{
+  --brand: #F59E0B;
+  --brand-700: #B45309;
+  --app-bg: #F8FAFC;
+  --text-color: #111827;
+  --header-bg: #FFFFFF;
+  --header-bg-translucent: rgba(255,255,255,.96);
+  --header-fg: #111827;
+  --nav-color: #111827;
+  --divider: #E5E7EB;
+  --btn-fg: #FFFFFF;
+  --brand-logo-size-mobile: 44px;
+  --brand-logo-size-desktop: 56px;
+  --logo-chip-bg: color-mix(in oklab, var(--brand) 12%, #ffffff);
+  --logo-ring: rgba(0,0,0,0.06);
+  --logo-shadow: 0 1px 0 rgba(0,0,0,0.25);
+}
+
+:root[data-theme="dark"]{
+  --brand: #F59E0B;
+  --brand-700: #D97706;
+  --app-bg: #1F2937;
+  --text-color: #E5E7EB;
+  --header-bg: rgba(31,41,55,.92);
+  --header-bg-translucent: rgba(31,41,55,.92);
+  --header-fg: #FFFFFF;
+  --nav-color: #E5E7EB;
+  --divider: #FFFFFF;
+  --btn-fg: #111827;
+  --brand-logo-size-mobile: 44px;
+  --brand-logo-size-desktop: 56px;
+  --logo-chip-bg: color-mix(in oklab, var(--brand) 12%, #ffffff);
+  --logo-ring: rgba(0,0,0,0.06);
+  --logo-shadow: 0 1px 0 rgba(0,0,0,0.25);
+}
+
+.app-shell, .app-header, .app-footer, .brandBadge, .primaryBtn, .submitBtn {
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.app-shell{
   display: grid;
   grid-template-rows: auto 1fr auto;
   height: 100vh;
   overflow: hidden;
+  background: var(--app-bg);
+  color: var(--text-color);
 }
 
-/* --- Header --- */
-.app-header {
-  background: #111827;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: 10;
+.app-header{
+  background: var(--header-bg-translucent);
+  backdrop-filter: saturate(180%) blur(8px);
+  -webkit-backdrop-filter: saturate(180%) blur(8px);
+  color: var(--header-fg);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-bottom: 3px solid var(--brand);
+  min-height: 56px;
 }
-.header-inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  max-width: 1200px;
-  margin: 0 auto;
+
+.header-inner{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 16px;
+  max-width:1200px;
+  margin:0 auto;
 }
-.brand {
-  font-size: 1.3rem;
+
+.brandRow{ display:flex; align-items:center; gap:12px; }
+.brandLink{ display:inline-flex; align-items:center; text-decoration: none; }
+
+.brandBadge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding: 6px;
+  background: var(--logo-chip-bg);
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 2px var(--logo-ring),
+    0 4px 10px rgba(0,0,0,0.08);
+}
+
+.brandLogo{
+  height: var(--brand-logo-size-mobile);
+  width: auto;
+  display: block;
+  filter: drop-shadow(var(--logo-shadow));
+}
+
+.brandText{
+  margin:0;
+  font-size:1.15rem;
+  font-weight:800;
+  color: var(--header-fg);
+}
+
+@media (min-width: 640px){
+  .brandLogo{ height: var(--brand-logo-size-desktop); }
+  .brandText{ font-size:1.25rem; }
+}
+@media (max-width: 380px){
+  .brandText{ display:none; }
+}
+
+.nav{
+  display:flex;
+  align-items:center;
+  gap: 14px;
+}
+
+.nav a{
+  color: var(--nav-color);
+  text-decoration: none;
   font-weight: 700;
-  text-decoration: none;
-  color: #fff;
+  position: relative;
+  padding: 6px 4px;
 }
-.nav a {
-  color: #e5e7eb;
-  text-decoration: none;
-  margin-left: 16px;
-  font-weight: 500;
-  transition: color 0.2s ease;
+.nav a:hover::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:-6px;
+  height:3px; background: var(--brand); border-radius:2px;
 }
-.nav a:hover {
-  color: #fff;
+.nav a:focus-visible{
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.nav a[aria-current="page"]::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:-6px;
+  height:3px; background: var(--brand); border-radius:2px;
 }
 
-/* --- Main (Scrollable) --- */
-.app-main {
+.themeToggle{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width: 46px;
+  height: 30px;
+  border-radius: 999px;
+  border: 1px solid var(--divider);
+  background: var(--header-bg);
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+}
+.toggleKnob{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+  font-size: 14px;
+  background: var(--brand);
+  color: var(--btn-fg);
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.toggleKnob[data-theme="dark"]{
+  transform: translate(calc(46px - 24px - 3px - 3px), -50%);
+}
+
+.app-main{
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding: 16px;
-  background-color: #f8fafc;
 }
 
-/* --- Footer --- */
-.app-footer {
-  background: #fff;
-  border-top: 1px solid #e5e7eb;
+.app-footer{
+  background: var(--header-bg);
+  border-top: 3px solid var(--brand);
 }
-.footer-inner {
-  max-width: 1200px;
-  margin: 0 auto;
+.footer-inner{
+  max-width:1200px;
+  margin:0 auto;
   padding: 10px 16px;
-  text-align: center;
-  font-size: 0.9rem;
-  color: #555;
+  text-align:center;
 }
 
-/* --- Mobile Responsiveness --- */
-@media (max-width: 640px) {
-  .header-inner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  .nav a {
-    margin: 0 8px 0 0;
-    display: inline-block;
-  }
+button {
+  font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  background: var(--brand);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, filter .15s ease, opacity .15s ease;
+}
+button:hover { background: var(--brand-700); }
+button:disabled { opacity: .5; cursor: not-allowed; }
+
+.primaryBtn, .submitBtn{
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-weight: 800;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  cursor: pointer;
+}
+.primaryBtn:hover, .submitBtn:hover{ background: var(--brand-700); }
+.primaryBtn:disabled, .submitBtn:disabled{ opacity: .5; cursor: not-allowed; }
+
+input {
+  font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  text-align: center;
+  border: 1px solid var(--divider);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 16px;
+  background: var(--header-bg);
+  color: var(--text-color);
+}
+input:focus {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.pill{
+  padding:6px 12px;
+  border-radius:999px;
+  font-weight:700;
+  border:1px solid var(--divider);
+  background: var(--header-bg);
+  color: var(--text-color);
+}
+.pill.done{
+  border-color: var(--brand);
+  background: color-mix(in oklab, var(--brand) 15%, transparent);
+  color: var(--brand-700);
 }

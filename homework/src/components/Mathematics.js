@@ -69,7 +69,7 @@ export default function Mathematics() {
     const [fractionalDiv, setFractionalDiv] = useState(false);
     const [divPrecision, setDivPrecision] = useState(2);
 
-    // NEW: Operation selection
+    // Operation selection
     const [operations, setOperations] = useState({
         add: true,
         sub: true,
@@ -92,6 +92,8 @@ export default function Mathematics() {
     const [elapsed, setElapsed] = useState(0);
     const intervalRef = useRef(null);
 
+    const noneSelected = !operations.add && !operations.sub && !operations.mul && !operations.div;
+
     // Timer helpers
     const startTimer = () => {
         clearInterval(intervalRef.current);
@@ -105,7 +107,22 @@ export default function Mathematics() {
 
     // Generate only selected operations
     const generateAll = () => {
-        const common = { count: numEquations, min: minNumber, max: maxNumber, nonNegativeSub, fractionalDiv, divPrecision };
+        if (noneSelected) return;
+
+        // sanitize inputs
+        const count = Math.max(1, Math.floor(Number(numEquations) || 1));
+        let min = Number.isFinite(minNumber) ? minNumber : 0;
+        let max = Number.isFinite(maxNumber) ? maxNumber : min + 10;
+        if (min > max) [min, max] = [max, min];
+
+        const common = {
+            count,
+            min,
+            max,
+            nonNegativeSub,
+            fractionalDiv,
+            divPrecision: Math.max(0, Math.min(6, Math.floor(divPrecision || 0))),
+        };
 
         setAddition(operations.add ? generateExpressions({ type: "add", ...common }) : []);
         setSubtraction(operations.sub ? generateExpressions({ type: "sub", ...common }) : []);
@@ -134,10 +151,14 @@ export default function Mathematics() {
 
     const startNewRoundAfterFinish = () => {
         resetAll();
+        // start immediately again with current config
         generateAll();
     };
 
-    const allProblems = useMemo(() => [...addition, ...subtraction, ...multiplication, ...division], [addition, subtraction, multiplication, division]);
+    const allProblems = useMemo(
+        () => [...addition, ...subtraction, ...multiplication, ...division],
+        [addition, subtraction, multiplication, division]
+    );
 
     useEffect(() => {
         if (!allProblems.length || finished) return;
@@ -161,9 +182,7 @@ export default function Mathematics() {
 
     const handleSubmit = () => setSubmitted(true);
 
-    const toggleOperation = (op) => {
-        setOperations((prev) => ({ ...prev, [op]: !prev[op] }));
-    };
+    const toggleOperation = (op) => setOperations((prev) => ({ ...prev, [op]: !prev[op] }));
 
     const renderColumn = (title, data, type) =>
         data.length > 0 && (
@@ -194,15 +213,22 @@ export default function Mathematics() {
                                         onWheel={(e) => e.target.blur()}
                                         onChange={(e) => handleChange(type, idx, e.target.value)}
                                         disabled={correct}
+                                        aria-label={`${title} problem ${idx + 1} answer`}
                                     />
                                     {submitted && (
                                         <span className={`mark ${correct ? "ok" : "no"}`}>{correct ? "✓" : "✗"}</span>
                                     )}
                                 </div>
 
-                                {submitted && !correct && typeof item.answer === "number" && !Number.isInteger(item.answer) && (
-                                    <div className="hint">Round to {divPrecision} decimal place{divPrecision === 1 ? "" : "s"}.</div>
-                                )}
+                                {submitted &&
+                                    !correct &&
+                                    typeof item.answer === "number" &&
+                                    !Number.isInteger(item.answer) && (
+                                        <div className="hint">
+                                            Round to {Math.max(0, Math.min(6, Math.floor(divPrecision || 0)))} decimal
+                                            place{divPrecision === 1 ? "" : "s"}.
+                                        </div>
+                                    )}
                             </div>
                         );
                     })}
@@ -212,34 +238,80 @@ export default function Mathematics() {
 
     return (
         <div className="wrap">
+            {/* Scoped, theme-aware styles */}
             <style>{`
-        .wrap { font-family: system-ui; background: #f6f7fb; min-height: 100vh; padding: 16px; box-sizing: border-box; }
+        .wrap {
+          font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+          background: var(--app-bg);
+          color: var(--text-color);
+          min-height: 100vh;
+          padding: 16px;
+          box-sizing: border-box;
+        }
         h2 { text-align: center; font-size: 1.6rem; margin-bottom: 8px; }
 
+        /* Status bar */
         .statusBar { display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
-        .pill { padding:6px 12px; border-radius:999px; font-weight:700; border:1px solid #6366f1; background:#eef2ff; color:#3730a3; }
-        .pill.done { border-color:#10b981; background:#ecfdf5; color:#065f46; }
+        .pill {
+          padding:6px 12px; border-radius:999px; font-weight:700;
+          border:1px solid var(--divider); background: var(--header-bg); color: var(--text-color);
+        }
+        /* .pill.done styling inherits extra accent from global App.css */
 
         .startOverBtn, .resetBtn {
           border:none; border-radius:999px; padding:8px 14px; font-weight:700; cursor:pointer;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.06);
         }
         .startOverBtn { background:#b91c1c; color:white; }
         .resetBtn { background:#065f46; color:white; }
 
-        .controls { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:16px; }
-        .ctrl { display:flex; align-items:center; gap:8px; background:white; padding:8px 10px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
-        .numberInput { width:100%; max-width:120px; padding:8px 10px; border:1px solid #ccc; border-radius:8px; }
-        .primaryBtn { background:#111827; color:white; padding:10px 14px; border:none; border-radius:10px; font-weight:700; }
+        /* Controls */
+        .controls {
+          display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+          gap:12px; margin-bottom:16px;
+        }
+        .ctrl {
+          display:flex; align-items:center; gap:8px;
+          background: var(--header-bg);
+          padding:10px 12px; border-radius:10px;
+          box-shadow:0 2px 8px rgba(0,0,0,0.08);
+          border: 1px solid var(--divider);
+        }
+        .numberInput {
+          width:100%; max-width:140px; padding:10px 12px;
+          border:1px solid var(--divider); border-radius:8px;
+          background: var(--header-bg); color: var(--text-color);
+        }
+        .numberInput:focus { outline: 2px solid var(--brand); outline-offset: 2px; }
 
+        .primaryBtn {
+          background: var(--brand); color: #fff; padding:12px 14px; border:none; border-radius:10px; font-weight:800;
+        }
+        .primaryBtn[disabled] { opacity: .5; cursor: not-allowed; }
+
+        /* Columns / cards */
         .columns { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
-        .card { background:white; padding:12px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+        .card {
+          background: var(--header-bg);
+          padding:12px; border-radius:10px;
+          box-shadow:0 2px 8px rgba(0,0,0,0.08);
+          border: 1px solid var(--divider);
+        }
         .cardTitle { text-align:center; margin-bottom:10px; }
+
         .expr { font-size:20px; width:120px; margin:auto; text-align:right; }
-        .hr { border-top:2px solid #000; margin-top:2px; }
+        .hr { border-top:2px solid currentColor; opacity:.6; margin-top:2px; }
+
         .answerRow { display:flex; align-items:center; justify-content:center; gap:8px; }
-        .answerInput { width:120px; padding:8px 10px; font-size:18px; border-radius:8px; border:1px solid #ccc; }
+        .answerInput {
+          width:120px; padding:10px 12px; font-size:18px;
+          border-radius:8px; border:1px solid var(--divider);
+          background: var(--header-bg); color: var(--text-color);
+        }
+        .answerInput:focus { outline: 2px solid var(--brand); outline-offset: 2px; }
+
         .mark.ok { color:#16a34a; } .mark.no { color:#dc2626; }
-        .hint { font-size:12px; opacity:0.7; text-align:center; }
+        .hint { font-size:12px; opacity:0.8; text-align:center; }
 
         @media(max-width:640px){ h2{font-size:1.35rem;} }
       `}</style>
@@ -255,6 +327,9 @@ export default function Mathematics() {
                 {!finished ? (
                     <>
                         {locked && <button className="startOverBtn" onClick={stopAndReset}>Start Over</button>}
+                        {!locked && noneSelected && (
+                            <span className="pill" role="status" aria-live="polite">Select at least one operation</span>
+                        )}
                     </>
                 ) : (
                     <button className="resetBtn" onClick={startNewRoundAfterFinish}>Start</button>
@@ -262,33 +337,101 @@ export default function Mathematics() {
             </div>
 
             {/* Controls */}
-            <div className="controls">
+            <div className="controls" role="group" aria-label="Math practice controls">
                 <label className="ctrl">
                     <span>Equations per type</span>
-                    <input type="number" min="1" className="numberInput" value={numEquations} onChange={(e) => setNumEquations(Number(e.target.value))} disabled={locked} />
+                    <input
+                        type="number"
+                        min="1"
+                        className="numberInput"
+                        value={numEquations}
+                        onWheel={(e) => e.target.blur()}
+                        onChange={(e) => setNumEquations(Math.max(1, Math.floor(Number(e.target.value) || 1)))}
+                        disabled={locked}
+                    />
                 </label>
 
                 <label className="ctrl"><span>Min</span>
-                    <input type="number" className="numberInput" value={minNumber} onChange={(e) => setMinNumber(Number(e.target.value))} disabled={locked} />
+                    <input
+                        type="number"
+                        className="numberInput"
+                        value={minNumber}
+                        onWheel={(e) => e.target.blur()}
+                        onChange={(e) => setMinNumber(Number(e.target.value))}
+                        disabled={locked}
+                    />
                 </label>
 
                 <label className="ctrl"><span>Max</span>
-                    <input type="number" className="numberInput" value={maxNumber} onChange={(e) => setMaxNumber(Number(e.target.value))} disabled={locked} />
+                    <input
+                        type="number"
+                        className="numberInput"
+                        value={maxNumber}
+                        onWheel={(e) => e.target.blur()}
+                        onChange={(e) => setMaxNumber(Number(e.target.value))}
+                        disabled={locked}
+                    />
                 </label>
 
-                <label className="ctrl"><input type="checkbox" checked={nonNegativeSub} onChange={(e) => setNonNegativeSub(e.target.checked)} disabled={locked} /> Non-negative sub</label>
-                <label className="ctrl"><input type="checkbox" checked={fractionalDiv} onChange={(e) => setFractionalDiv(e.target.checked)} disabled={locked} /> Fractional div</label>
+                <label className="ctrl">
+                    <input
+                        type="checkbox"
+                        checked={nonNegativeSub}
+                        onChange={(e) => setNonNegativeSub(e.target.checked)}
+                        disabled={locked}
+                    />
+                    Non-negative sub
+                </label>
+
+                <label className="ctrl">
+                    <input
+                        type="checkbox"
+                        checked={fractionalDiv}
+                        onChange={(e) => setFractionalDiv(e.target.checked)}
+                        disabled={locked}
+                    />
+                    Fractional div
+                </label>
+
                 <label className="ctrl"><span>Precision</span>
-                    <input type="number" min="0" max="6" className="numberInput" value={divPrecision} onChange={(e) => setDivPrecision(Number(e.target.value))} disabled={!fractionalDiv || locked} />
+                    <input
+                        type="number"
+                        min="0"
+                        max="6"
+                        className="numberInput"
+                        value={divPrecision}
+                        onWheel={(e) => e.target.blur()}
+                        onChange={(e) => setDivPrecision(Math.max(0, Math.min(6, Math.floor(Number(e.target.value) || 0))))}
+                        disabled={!fractionalDiv || locked}
+                    />
                 </label>
 
-                {/* NEW operation checkboxes */}
-                <label className="ctrl"><input type="checkbox" checked={operations.add} onChange={() => toggleOperation("add")} disabled={locked} /> Addition</label>
-                <label className="ctrl"><input type="checkbox" checked={operations.sub} onChange={() => toggleOperation("sub")} disabled={locked} /> Subtraction</label>
-                <label className="ctrl"><input type="checkbox" checked={operations.mul} onChange={() => toggleOperation("mul")} disabled={locked} /> Multiplication</label>
-                <label className="ctrl"><input type="checkbox" checked={operations.div} onChange={() => toggleOperation("div")} disabled={locked} /> Division</label>
+                {/* Operation checkboxes */}
+                <label className="ctrl">
+                    <input type="checkbox" checked={operations.add} onChange={() => toggleOperation("add")} disabled={locked} />
+                    Addition
+                </label>
+                <label className="ctrl">
+                    <input type="checkbox" checked={operations.sub} onChange={() => toggleOperation("sub")} disabled={locked} />
+                    Subtraction
+                </label>
+                <label className="ctrl">
+                    <input type="checkbox" checked={operations.mul} onChange={() => toggleOperation("mul")} disabled={locked} />
+                    Multiplication
+                </label>
+                <label className="ctrl">
+                    <input type="checkbox" checked={operations.div} onChange={() => toggleOperation("div")} disabled={locked} />
+                    Division
+                </label>
 
-                <button className="primaryBtn" onClick={generateAll} disabled={locked}> {locked ? "In Progress…" : "Start"} </button>
+                <button
+                    className="primaryBtn"
+                    onClick={generateAll}
+                    disabled={locked || noneSelected}
+                    title={noneSelected ? "Select at least one operation" : "Start practice"}
+                >
+                    {locked ? "In Progress…" : noneSelected ? "Select operations" : "Start"}
+                </button>
             </div>
 
             {/* Problem Columns */}

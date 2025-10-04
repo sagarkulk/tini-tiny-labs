@@ -5,25 +5,26 @@ export default function Home() {
   return (
     <div
       style={{
+        height: "100%",
         display: "flex",
         flexDirection: "column",
+        gap: 16,
         justifyContent: "center",
         alignItems: "center",
-        height: "100%",
         textAlign: "center",
+        padding: 16,
       }}
     >
-      <h1 style={{ marginBottom: "16px" }}>Welcome to Homework</h1>
+      <h1 style={{ margin: 0 }}>Welcome to Homework</h1>
+      <p style={{ margin: 0, opacity: 0.8 }}>
+        Practice arithmetic with a clean, mobile-friendly UI.
+      </p>
+
       <Link
         to="/Homework/Mathematics"
-        style={{
-          textDecoration: "none",
-          background: "#2563eb",
-          color: "white",
-          padding: "10px 20px",
-          borderRadius: "8px",
-          fontWeight: "600",
-        }}
+        className="primaryBtn"
+        aria-label="Go to Mathematics practice"
+        style={{ textDecoration: "none", marginTop: 12, minWidth: 200 }}
       >
         Go to Mathematics
       </Link>
