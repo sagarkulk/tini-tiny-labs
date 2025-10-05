@@ -82,11 +82,16 @@ export default function App() {
             <Route path="/homework/mathematics" element={<Mathematics />} />
             <Route path="/homework/feedback" element={<Feedback />} />
 
-            {/* legacy redirects from old capitalized paths */}
-            <Route path="/Homework" element={<Navigate to="/homework" replace />} />
-            <Route path="/Homework/Mathematics" element={<Navigate to="/homework/mathematics" replace />} />
-            <Route path="/Homework/Feedback" element={<Navigate to="/homework/feedback" replace />} />
+            {/* optional safety redirects for static-file hits */}
+            <Route path="/index.html" element={<Navigate to="/homework" replace />} />
+            <Route path="/404.html" element={<Navigate to="/homework" replace />} />
 
+            {/* (optional) legacy uppercase redirects — can remove if using LowercaseRedirect */}
+            {/* <Route path="/Homework" element={<Navigate to="/homework" replace />} />
+                <Route path="/Homework/Mathematics" element={<Navigate to="/homework/mathematics" replace />} />
+                <Route path="/Homework/Feedback" element={<Navigate to="/homework/feedback" replace />} /> */}
+
+            {/* catch-all */}
             <Route path="*" element={<div style={{ padding: 16 }}>404 Not Found</div>} />
           </Routes>
         </main>

@@ -17,10 +17,15 @@
     (function () {
       var params = new URLSearchParams(window.location.search);
       var p = params.get("p");
-      if (p) {
-        var BASE = "/tini-tiny-labs"; // set to "" when you switch to custom domain root
-        history.replaceState(null, "", BASE.replace(/\/$/, "") + p);
-      }
+      if (!p) return;
+
+      var BASE = "/tini-tiny-labs"; // set to "" when you move to custom-domain root
+
+      // If p already starts with BASE, don't prepend it again
+      var baseNoSlash = BASE.replace(/\/$/, "");
+      var nextUrl = p.startsWith(baseNoSlash + "/") ? p : baseNoSlash + p;
+
+      history.replaceState(null, "", nextUrl);
     })();
   </script>
 

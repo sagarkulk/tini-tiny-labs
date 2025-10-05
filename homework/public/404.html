@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting…</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      (function () {
+        // Project base on GitHub Pages. Use "" when you move to custom domain root.
+        var REPO_BASE = "/tini-tiny-labs";
+        var l = window.location;
 
-<head>
-  <meta charset="utf-8" />
-  <title>Redirecting…</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>
-    (function () {
-      var REPO_BASE = "/tini-tiny-labs"; // "" when you switch to custom domain root
-      var l = window.location;
+        // Strip the repo prefix if present
+        var path = l.pathname.startsWith(REPO_BASE)
+          ? l.pathname.slice(REPO_BASE.length)
+          : l.pathname;
 
-      // strip repo prefix if present
-      var path = l.pathname.startsWith(REPO_BASE)
-        ? l.pathname.slice(REPO_BASE.length)
-        : l.pathname;
+        // Encode full original URL parts (path + query + hash)
+        var full = path + l.search + l.hash;
 
-      // encode full original URL parts
-      var full = path + l.search + l.hash;
+        // Redirect to index.html with the original path in ?p=
+        var target =
+          REPO_BASE.replace(/\/$/, "") +
+          "/index.html?p=" +
+          encodeURIComponent(full);
 
-      // send to index.html with ?p=<full>
-      var target =
-        REPO_BASE.replace(/\/$/, "") + "/index.html?p=" + encodeURIComponent(full);
-
-      // replace so 404 doesn't stick in history
-      l.replace(target);
-    })();
-  </script>
-  <noscript>
-    JavaScript is required. <a href="/tini-tiny-labs/">Go to Home</a>.
-  </noscript>
-</head>
-
-<body></body>
-
+        // Replace so this 404 doesn't stay in history
+        l.replace(target);
+      })();
+    </script>
+    <noscript>
+      JavaScript is required. <a href="/tini-tiny-labs/">Go to Home</a>.
+    </noscript>
+  </head>
+  <body></body>
 </html>
