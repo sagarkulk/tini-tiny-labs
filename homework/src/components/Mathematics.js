@@ -17,8 +17,9 @@ function formatTime(totalSeconds) {
 function generateExpressions({ type, count, min, max, nonNegativeSub, fractionalDiv, divPrecision }) {
   const expressions = [];
   for (let i = 0; i < count; i++) {
-    let a = getRandomInt(min, max);
-    let b = getRandomInt(min, max);
+    let a = getRandomInt(Math.max(-500, min), Math.min(500, max));
+    let b = getRandomInt(Math.max(-500, min), Math.min(500, max));
+
     let expr = "";
     let answer = 0;
 
@@ -35,6 +36,9 @@ function generateExpressions({ type, count, min, max, nonNegativeSub, fractional
         break;
       default: break;
     }
+    answer = Math.max(-250000, Math.min(250000, answer));
+    a = Math.max(-500, Math.min(500, a));
+    b = Math.max(-500, Math.min(500, b));
     expressions.push({ expr, answer, userAnswer: "" });
   }
   return expressions;
@@ -78,15 +82,17 @@ export default function Mathematics() {
     if (noneSelected) return;
 
     const count = Math.max(1, Math.floor(Number(numEquations) || 1));
-    let min = Number.isFinite(minNumber) ? minNumber : 0;
-    let max = Number.isFinite(maxNumber) ? maxNumber : min + 10;
+    let min = Math.max(-500, Math.min(500, Number.isFinite(minNumber) ? minNumber : 0));
+    let max = Math.max(-500, Math.min(500, Number.isFinite(maxNumber) ? maxNumber : min + 10));
+
     if (min > max) [min, max] = [max, min];
 
     const common = {
-      count, min, max,
+      count: Math.max(1, Math.min(20, Math.floor(count))),
+      min, max,
       nonNegativeSub,
       fractionalDiv,
-      divPrecision: Math.max(0, Math.min(6, Math.floor(divPrecision || 0))),
+      divPrecision: Math.max(0, Math.min(4, Math.floor(divPrecision || 0))),
     };
 
     setAddition(operations.add ? generateExpressions({ type: "add", ...common }) : []);
@@ -116,7 +122,12 @@ export default function Mathematics() {
   useEffect(() => {
     if (!allProblems.length || finished) return;
     const allCorrect = allProblems.every((p) => isCorrectAnswer(p.userAnswer, p.answer));
-    if (allCorrect) { setFinished(true); setSubmitted(true); stopTimer(); }
+    if (allCorrect) {
+      setFinished(true);
+      setSubmitted(true);
+      stopTimer();
+      setLocked(false);
+    }
   }, [allProblems, finished]);
 
   useEffect(() => () => stopTimer(), []);
@@ -150,19 +161,33 @@ export default function Mathematics() {
                   <input
                     className="answerInput"
                     type="number"
-                    min="0"
+                    min={-250000}
+                    max={250000}
                     inputMode="decimal"
                     step="any"
                     value={item.userAnswer}
                     onWheel={(e) => e.target.blur()}
-                    onChange={(e) => handleChange(type, idx, e.target.value)}
-                    disabled={correct}
+                    onChange={(e) => {
+                      const raw = e.target.value;
+                      if (raw === "") {
+                        handleChange(type, idx, "");
+                        return;
+                      }
+                      const num = Number(raw);
+                      if (Number.isNaN(num)) return;
+                      const value = Math.max(-250000, Math.min(250000, num));
+                      handleChange(type, idx, value);
+                    }}
+                    disabled={submitted && correct}
                     aria-label={`${title} problem ${idx + 1} answer`}
                   />
                   {submitted && <span className={`mark ${correct ? "ok" : "no"}`}>{correct ? "✓" : "✗"}</span>}
                 </div>
                 {submitted && !correct && typeof item.answer === "number" && !Number.isInteger(item.answer) && (
-                  <div className="hint">Round to {Math.max(0, Math.min(6, Math.floor(divPrecision || 0)))} decimal place{divPrecision === 1 ? "" : "s"}.</div>
+                  <div className="hint">
+                    Round to {Math.max(0, Math.min(4, Math.floor(divPrecision || 0)))} decimal
+                    place{divPrecision === 1 ? "" : "s"}.
+                  </div>
                 )}
               </div>
             );
@@ -262,15 +287,15 @@ export default function Mathematics() {
         }
 
         .actions .primaryBtn { width:100%; margin-top: 10px; }
-
+        
         .columns { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
         .card { background: var(--header-bg); padding:12px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.08); border:1px solid var(--divider); }
         .cardTitle { text-align:center; margin-bottom:10px; }
-        .expr { font-size:20px; width:120px; margin:auto; text-align:right; }
+        .expr { font-size:20px; width:90px; margin:auto; text-align:right; }
         .hr { border-top:2px solid currentColor; opacity:.6; margin-top:2px; }
         .answerRow { display:flex; align-items:center; justify-content:center; gap:8px; }
         .answerInput { width:120px; padding:10px 12px; font-size:18px; border-radius:8px; border:1px solid var(--divider);
-          background: var(--header-bg); color: var(--text-color); box-sizing: border-box; }
+          background: var(--header-bg); color: var(--text-color); box-sizing: border-box; text-align: right; }
         .answerInput:focus { outline: 2px solid var(--brand); outline-offset: 2px; }
         .mark.ok { color:#16a34a; } .mark.no { color:#dc2626; }
         .hint { font-size:12px; opacity:0.8; text-align:center; }
@@ -304,30 +329,38 @@ export default function Mathematics() {
               <label className="ctrlPair">
                 <span className="label">Equations per type</span>
                 <input
-                  type="number" min="1" className="numberInput"
+                  type="number" min="1" max="20" className="numberInput"
                   value={numEquations}
                   onWheel={(e) => e.target.blur()}
-                  onChange={(e) => setNumEquations(Math.max(1, Math.floor(Number(e.target.value) || 1)))}
+                  onChange={(e) =>
+                    setNumEquations(
+                      Math.max(1, Math.min(20, Math.floor(Number(e.target.value) || 1)))
+                    )
+                  }
                 />
               </label>
-
               <label className="ctrlPair">
                 <span className="label">Min</span>
                 <input
                   type="number" className="numberInput"
+                  min="-500" max="500"
                   value={minNumber}
                   onWheel={(e) => e.target.blur()}
-                  onChange={(e) => setMinNumber(Number(e.target.value))}
+                  onChange={(e) =>
+                    setMinNumber(Math.max(-500, Math.min(500, Number(e.target.value) || 0)))
+                  }
                 />
               </label>
-
               <label className="ctrlPair">
                 <span className="label">Max</span>
                 <input
                   type="number" className="numberInput"
+                  min="-500" max="500"
                   value={maxNumber}
                   onWheel={(e) => e.target.blur()}
-                  onChange={(e) => setMaxNumber(Number(e.target.value))}
+                  onChange={(e) =>
+                    setMaxNumber(Math.max(-500, Math.min(500, Number(e.target.value) || 0)))
+                  }
                 />
               </label>
 
@@ -343,7 +376,8 @@ export default function Mathematics() {
               <label className="ctrlPair">
                 <span className="label">Fractional division</span>
                 <input
-                  type="checkbox" className="checkInput"
+                  type="checkbox"
+                  className="checkInput"
                   checked={fractionalDiv}
                   onChange={(e) => setFractionalDiv(e.target.checked)}
                 />
@@ -352,24 +386,37 @@ export default function Mathematics() {
               <label className="ctrlPair">
                 <span className="label">Precision</span>
                 <input
-                  type="number" min="0" max="6" className="numberInput"
+                  type="number"
+                  min="0"
+                  max="4"
+                  className="numberInput"
                   value={divPrecision}
                   onWheel={(e) => e.target.blur()}
-                  onChange={(e) => setDivPrecision(Math.max(0, Math.min(6, Math.floor(Number(e.target.value) || 0))))}
+                  onChange={(e) =>
+                    setDivPrecision(
+                      Math.max(0, Math.min(4, Math.floor(Number(e.target.value) || 0)))
+                    )
+                  }
                   disabled={!fractionalDiv}
+                  title={
+                    fractionalDiv
+                      ? "Set number of decimal places (0–4)"
+                      : "Enable fractional division to adjust precision"
+                  }
                 />
               </label>
             </div>
-
             <div className="actions">
-              <button
-                className="primaryBtn"
-                onClick={generateAll}
-                disabled={locked || noneSelected}
-                title={noneSelected ? "Select at least one operation" : "Start practice"}
-              >
-                {locked ? "In Progress…" : noneSelected ? "Select operations" : "Start"}
-              </button>
+              {!finished && (
+                <button
+                  className="primaryBtn"
+                  onClick={generateAll}
+                  disabled={locked || noneSelected}
+                  title={noneSelected ? "Select at least one operation" : "Start practice"}
+                >
+                  {locked ? "In Progress…" : noneSelected ? "Select operations" : "Start"}
+                </button>
+              )}
             </div>
           </div>
         </fieldset>

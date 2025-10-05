@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation, useNaviga
 import Home from "./components/Home";
 import Mathematics from "./components/Mathematics";
 import Feedback from "./components/Feedback";
+import RouteChangeTracker from "./RouteChangeTracker";
 import "./App.css";
 
 function ThemeToggle({ theme, onToggle }) {
@@ -44,6 +45,7 @@ export default function App() {
   return (
     <BrowserRouter basename="/tini-tiny-labs">
       <LowercaseRedirect />
+      <RouteChangeTracker base="/tini-tiny-labs" />
       <div className="app-shell">
         <header className="app-header">
           <div className="header-inner">
