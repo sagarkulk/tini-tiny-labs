@@ -1,17 +1,36 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Redirecting…</title>
-    <script>
-      (function () {
-        var repo = "/tini-tiny-labs";
-        var l = window.location;
-        var path = l.pathname.startsWith(repo) ? l.pathname.slice(repo.length) : l.pathname;
-        var search = l.search ? l.search + "&" : "?";
-        l.replace(repo + "/index.html" + search + "p=" + encodeURIComponent(path) + l.hash);
-      })();
-    </script>
-  </head>
-  <body></body>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Redirecting…</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>
+    (function () {
+      var REPO_BASE = "/tini-tiny-labs"; // "" when you switch to custom domain root
+      var l = window.location;
+
+      // strip repo prefix if present
+      var path = l.pathname.startsWith(REPO_BASE)
+        ? l.pathname.slice(REPO_BASE.length)
+        : l.pathname;
+
+      // encode full original URL parts
+      var full = path + l.search + l.hash;
+
+      // send to index.html with ?p=<full>
+      var target =
+        REPO_BASE.replace(/\/$/, "") + "/index.html?p=" + encodeURIComponent(full);
+
+      // replace so 404 doesn't stick in history
+      l.replace(target);
+    })();
+  </script>
+  <noscript>
+    JavaScript is required. <a href="/tini-tiny-labs/">Go to Home</a>.
+  </noscript>
+</head>
+
+<body></body>
+
 </html>

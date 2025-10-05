@@ -2,21 +2,36 @@
 <html lang="en">
 
 <head>
-  <!-- Google tag (gtag.js) -->
+  <!-- Google Analytics 4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QVYWG4B7B3"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-
+    // We send SPA pageviews manually via RouteChangeTracker
     gtag('config', 'G-QVYWG4B7B3', { send_page_view: false });
   </script>
+
+  <!-- Restore SPA route BEFORE React mounts (GitHub Pages 404 shim) -->
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var p = params.get("p");
+      if (p) {
+        var BASE = "/tini-tiny-labs"; // set to "" when you switch to custom domain root
+        history.replaceState(null, "", BASE.replace(/\/$/, "") + p);
+      }
+    })();
+  </script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Homework App</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Icons/manifest (these %PUBLIC_URL% paths are fine for CRA/Pages) -->
   <link rel="icon" href="%PUBLIC_URL%/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32.png">
   <link rel="icon" type="image/png" sizes="48x48" href="%PUBLIC_URL%/favicon-48.png">
@@ -27,16 +42,7 @@
 
 <body>
   <div id="root"></div>
-  <script>
-    (function () {
-      var params = new URLSearchParams(window.location.search);
-      var p = params.get("p");
-      if (p) {
-        var newUrl = window.location.origin + "/tini-tiny-labs" + p + window.location.hash;
-        window.history.replaceState(null, "", newUrl);
-      }
-    })();
-  </script>
+  <!-- Your React bundle scripts will be injected here by the build -->
 </body>
 
 </html>
