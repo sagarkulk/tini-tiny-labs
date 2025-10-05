@@ -224,7 +224,7 @@ export default function Mathematics() {
           /*font-weight:700;*/
           justify-self:end;
           text-align:right;
-          white-space: nowrap;
+          /*white-space: nowrap;*/
         }
         .numberInput {
           width:100%;
