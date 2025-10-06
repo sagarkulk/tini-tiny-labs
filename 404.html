@@ -1,36 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
     <title>Redirecting…</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content="0; url=/" />
     <script>
-      (function () {
-        // Project base on GitHub Pages. Use "" when you move to custom domain root.
-        var REPO_BASE = "/tini-tiny-labs";
-        var l = window.location;
-
-        // Strip the repo prefix if present
-        var path = l.pathname.startsWith(REPO_BASE)
-          ? l.pathname.slice(REPO_BASE.length)
-          : l.pathname;
-
-        // Encode full original URL parts (path + query + hash)
-        var full = path + l.search + l.hash;
-
-        // Redirect to index.html with the original path in ?p=
-        var target =
-          REPO_BASE.replace(/\/$/, "") +
-          "/index.html?p=" +
-          encodeURIComponent(full);
-
-        // Replace so this 404 doesn't stay in history
-        l.replace(target);
-      })();
+      // Prevent loops if a CDN/browser caches an old path
+      if (!/\/$/.test(location.pathname)) location.replace("/");
+      else location.replace("/");
     </script>
-    <noscript>
-      JavaScript is required. <a href="/tini-tiny-labs/">Go to Home</a>.
-    </noscript>
   </head>
-  <body></body>
+  <body>Redirecting…</body>
 </html>
