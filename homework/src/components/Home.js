@@ -15,7 +15,7 @@ export default function Home() {
         padding: 16,
       }}
     >
-      <h1 style={{ margin: 0 }}>Welcome to Homework</h1>
+      <h1 style={{ margin: 0 }}>Let's Practice</h1>
       <p style={{ margin: 0, opacity: 0.8 }}>
         Practice arithmetic with a clean, mobile-friendly UI.
       </p>
@@ -23,10 +23,10 @@ export default function Home() {
       <Link
         to="/Homework/Mathematics"
         className="primaryBtn"
-        aria-label="Go to Mathematics practice"
+        aria-label="Mathematics"
         style={{ textDecoration: "none", marginTop: 12, minWidth: 200 }}
       >
-        Go to Mathematics
+        Mathematics
       </Link>
     </div>
   );
