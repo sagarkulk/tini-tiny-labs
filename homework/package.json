@@ -11,6 +11,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "postbuild": "node scripts/preroute.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
@@ -26,7 +27,7 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://sagarkulk.github.io/tini-tiny-labs/",
+  "homepage": ".",
   "devDependencies": {
     "gh-pages": "^6.3.0"
   }

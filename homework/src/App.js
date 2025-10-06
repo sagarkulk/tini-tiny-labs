@@ -43,9 +43,9 @@ export default function App() {
   }, [theme]);
 
   return (
-    <BrowserRouter basename="/tini-tiny-labs">
+    <BrowserRouter>
       <LowercaseRedirect />
-      <RouteChangeTracker base="/tini-tiny-labs" />
+      <RouteChangeTracker />
       <div className="app-shell">
         <header className="app-header">
           <div className="header-inner">
@@ -53,11 +53,8 @@ export default function App() {
               <NavLink to="/homework" className="brandLink" aria-label="Tini-Tiny Labs home">
                 <span className="brandBadge">
                   <img
-                    src={process.env.PUBLIC_URL + "/logo-transparent.png"}
-                    srcSet={
-                      process.env.PUBLIC_URL + "/logo-transparent.png 2x, " +
-                      process.env.PUBLIC_URL + "/icon-512.png 3x"
-                    }
+                    src="/logo-transparent.png"
+                    srcSet="/logo-transparent.png 2x, /icon-512.png 3x"
                     alt="Tini-Tiny Labs"
                     className="brandLogo"
                   />
