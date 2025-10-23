@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Home from "./components/Home";
 import Mathematics from "./components/Mathematics";
+import MathematicsV2 from "./components/MathematicsV2";
 import Feedback from "./components/Feedback";
 import RouteChangeTracker from "./RouteChangeTracker";
 import "./App.css";
@@ -66,6 +67,7 @@ export default function App() {
             <nav className="nav">
               <NavLink to="/homework">Home</NavLink>
               <NavLink to="/homework/mathematics">Mathematics</NavLink>
+              <NavLink to="/homework/mathematicsV2">Mathematics V2</NavLink>
               <ThemeToggle theme={theme} onToggle={() => setTheme(t => (t === "light" ? "dark" : "light"))} />
             </nav>
           </div>
@@ -77,6 +79,7 @@ export default function App() {
             <Route path="/" element={<Navigate to="/homework" replace />} />
             <Route path="/homework" element={<Home />} />
             <Route path="/homework/mathematics" element={<Mathematics />} />
+            <Route path="/homework/mathematicsV2" element={<MathematicsV2 />} />
             <Route path="/homework/feedback" element={<Feedback />} />
 
             {/* optional safety redirects for static-file hits */}
