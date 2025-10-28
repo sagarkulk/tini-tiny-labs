@@ -38,6 +38,8 @@ h2 {
 	max-width: 700px;
 	text-align: center;
 	min-block-size: clamp(220px, 38vh, 420px);
+	overflow-anchor: none;
+	contain: layout;
 }
 
 .scramble-wrap {
@@ -48,11 +50,13 @@ h2 {
 
 .scramble-wrap.off {
 	visibility: hidden;
+	opacity: 0;
 	pointer-events: none;
 }
 
 .scramble-wrap.on {
 	visibility: visible;
+	opacity: 1;
 }
 
 .show-word {
@@ -70,13 +74,8 @@ h2 {
 }
 
 @keyframes blink {
-	from {
-		opacity: 1;
-	}
-
-	to {
-		opacity: 0.7;
-	}
+	from { opacity: 1; }
+	to { opacity: 0.7; }
 }
 
 .word-wrap {
@@ -123,6 +122,7 @@ h2 {
 	overflow-x: hidden;
 	max-width: 100%;
 	touch-action: manipulation;
+	contain: layout paint;
 }
 
 .letter {
@@ -139,7 +139,9 @@ h2 {
 	background-color: #ffeb99;
 	color: #111 !important;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-	transition: transform 0.1s ease, background-color 0.1s ease;
+	/* Important: no background-color transition to avoid green→yellow blend flicker */
+	transition: transform 0.1s ease;
+	will-change: transform;
 	user-select: none;
 }
 
@@ -150,17 +152,9 @@ h2 {
 }
 
 @keyframes pulse {
-	0% {
-		transform: scale(1);
-	}
-
-	50% {
-		transform: scale(1.05);
-	}
-
-	100% {
-		transform: scale(1);
-	}
+	0% { transform: scale(1); }
+	50% { transform: scale(1.05); }
+	100% { transform: scale(1); }
 }
 
 .meaning {
@@ -196,10 +190,6 @@ h2 {
 	overflow: hidden;
 }
 
-.ws .word-section {
-	overflow-anchor: none;
-}
-
 html,
 body {
 	overflow-x: hidden;
@@ -207,10 +197,12 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-
 	.show-word,
 	.letter.correct {
 		animation: none;
+	}
+	.letter {
+		transition: none;
 	}
 }
 
@@ -234,3 +226,4 @@ body {
 		font-size: clamp(16px, 8vw, 32px);
 	}
 }
+.scramble-container { backface-visibility: hidden; }
