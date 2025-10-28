@@ -96,6 +96,7 @@ body {
   overflow: hidden;
   background: var(--app-bg);
   color: var(--text-color);
+  min-height: 100dvh; /* mobile-friendly viewport */
 }
 
 .app-header {
@@ -115,8 +116,14 @@ body {
   padding: 12px 16px;
   max-width: 1200px;
   margin: 0 auto;
+  gap: 12px; /* added for safety on narrow screens */
 }
 
+/* groups */
+.header-left { display:flex; align-items:center; gap:12px; min-width:0; }
+.header-right { display:flex; align-items:center; gap:10px; }
+
+/* Brand */
 .brandRow {
   display: flex;
   align-items: center;
@@ -127,6 +134,9 @@ body {
   display: inline-flex;
   align-items: center;
   text-decoration: none;
+  color: var(--header-fg);
+  gap: 10px;
+  min-width: 0;
 }
 
 .brandBadge {
@@ -151,36 +161,36 @@ body {
 .brandText {
   margin: 0;
   font-size: 1.15rem;
-  /*font-weight:800;*/
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: min(52vw, 300px);
   color: var(--header-fg);
 }
 
 @media (min-width: 640px) {
-  .brandLogo {
-    height: var(--brand-logo-size-desktop);
-  }
-
-  .brandText {
-    font-size: 1.25rem;
-  }
+  .brandLogo { height: var(--brand-logo-size-desktop); }
+  .brandText { font-size: 1.25rem; }
 }
 
 @media (max-width: 380px) {
-  .brandText {
-    display: none;
-  }
+  .brandText { display: none; }
 }
 
+/* Nav */
 .nav {
   display: flex;
   align-items: center;
   gap: 14px;
+  flex-wrap: nowrap; /* don't wrap by default */
+}
+@media (max-width: 768px) {
+  .nav { flex-wrap: wrap; }
 }
 
 .nav a {
   color: var(--nav-color);
   text-decoration: none;
-  /*font-weight: 700;*/
   position: relative;
   padding: 6px 4px;
 }
@@ -188,9 +198,7 @@ body {
 .nav a:hover::after {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -6px;
+  left: 0; right: 0; bottom: -6px;
   height: 3px;
   background: var(--brand);
   border-radius: 2px;
@@ -205,20 +213,18 @@ body {
 .nav a[aria-current="page"]::after {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -6px;
+  left: 0; right: 0; bottom: -6px;
   height: 3px;
   background: var(--brand);
   border-radius: 2px;
 }
 
+/* Theme toggle */
 .themeToggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 30px;
+  width: 46px; height: 30px;
   border-radius: 999px;
   border: 1px solid var(--divider);
   background: var(--header-bg);
@@ -231,27 +237,25 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 24px; height: 24px;
   border-radius: 50%;
   transition: transform 0.2s ease;
   font-size: 14px;
   background: var(--brand);
   color: var(--btn-fg);
   position: absolute;
-  left: 3px;
-  top: 50%;
+  left: 3px; top: 50%;
   transform: translateY(-50%);
 }
-
 .toggleKnob[data-theme="dark"] {
   transform: translate(calc(46px - 24px - 3px - 3px), -50%);
 }
 
+/* Main/footer */
 .app-main {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 16px;
+  padding: calc(env(safe-area-inset-top, 0) + 12px) 16px calc(env(safe-area-inset-bottom, 0) + 16px);
 }
 
 .app-footer {
@@ -273,19 +277,13 @@ button {
   border: none;
   background: var(--brand);
   color: #fff;
-  /*font-weight: 700;*/
   cursor: pointer;
   transition: background 0.15s ease, filter .15s ease, opacity .15s ease;
+  min-height: 44px; min-width: 44px; /* tap targets */
 }
 
-button:hover {
-  background: var(--brand-700);
-}
-
-button:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
+button:hover { background: var(--brand-700); }
+button:disabled { opacity: .5; cursor: not-allowed; }
 
 .primaryBtn,
 .submitBtn {
@@ -294,21 +292,14 @@ button:disabled {
   border: none;
   border-radius: 12px;
   padding: 12px 14px;
-  /*font-weight: 800;*/
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   cursor: pointer;
+  min-height: 44px;
 }
-
 .primaryBtn:hover,
-.submitBtn:hover {
-  background: var(--brand-700);
-}
-
+.submitBtn:hover { background: var(--brand-700); }
 .primaryBtn:disabled,
-.submitBtn:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
+.submitBtn:disabled { opacity: .5; cursor: not-allowed; }
 
 input {
   font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
@@ -319,8 +310,8 @@ input {
   font-size: 16px;
   background: var(--header-bg);
   color: var(--text-color);
+  min-height: 44px; /* iOS zoom guard */
 }
-
 input:focus {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
@@ -329,12 +320,11 @@ input:focus {
 .pill {
   padding: 6px 12px;
   border-radius: 999px;
-  /*font-weight:700;*/
   border: 1px solid var(--divider);
   background: var(--header-bg);
   color: var(--text-color);
+  white-space: nowrap;
 }
-
 .pill.done {
   border-color: var(--brand);
   background: color-mix(in oklab, var(--brand) 15%, transparent);
@@ -348,23 +338,210 @@ input:focus {
   gap: 18px;
   margin-bottom: 6px;
 }
-
 .footer-link {
   text-decoration: none;
   color: var(--nav-color);
-  /*font-weight: 800;*/
   padding: 8px 12px;
   border-radius: 10px;
   border: 1px solid var(--divider);
   background: var(--header-bg);
 }
-
 .footer-link:hover {
   background: color-mix(in oklab, var(--brand) 12%, transparent);
 }
-
 .footer-link[aria-current="page"] {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
   border-radius: 10px;
 }
+
+/* ===== Mobile utilities ===== */
+:root {
+  --fs-h1: clamp(20px, 6.5vw, 30px);
+  --fs-h2: clamp(18px, 5.2vw, 26px);
+  --fs-body: clamp(14px, 3.8vw, 18px);
+  --fs-sm: clamp(12px, 3.2vw, 16px);
+
+  --sp-1: clamp(6px, 1.2vw, 10px);
+  --sp-2: clamp(10px, 2.2vw, 16px);
+  --sp-3: clamp(14px, 3vw, 22px);
+  --sp-4: clamp(18px, 3.8vw, 28px);
+
+  --radius-md: 12px;
+  --radius-lg: 18px;
+}
+
+/* headings scale on phones */
+h1 { font-size: var(--fs-h1); }
+h2 { font-size: var(--fs-h2); }
+
+/* layout helpers */
+.stack { display: grid; gap: var(--sp-2); }
+.row { display: flex; gap: var(--sp-2); flex-wrap: wrap; align-items: center; }
+.pills { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+
+/* a single line of big text that never overflows */
+.fit-text {
+  font-size: clamp(22px, 9.5vw, 44px);
+  line-height: 1.1;
+  text-align: center;
+  word-break: break-word;
+  font-weight: 800;
+}
+
+/* letter tiles that wrap & scale (if needed) */
+.tiles {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+}
+.tile {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: clamp(34px, 11vw, 58px);
+  height: clamp(40px, 12vw, 64px);
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--header-bg) 70%, transparent);
+  border: 1px solid color-mix(in oklab, var(--divider) 70%, transparent);
+  font-size: clamp(16px, 6vw, 28px);
+  font-weight: 800;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+/* tiny corner timer that doesn't push layout */
+.timer-badge {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--header-bg);
+  border: 1px solid var(--divider);
+  color: color-mix(in oklab, var(--text-color) 80%, transparent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800;
+}
+
+/* ===== Left sidebar drawer + burger (mobile-first) ===== */
+:root {
+  --sidebar-w: 280px;
+  --sidebar-shadow: 0 12px 40px rgba(0, 0, 0, .35);
+}
+
+.burgerBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  border: 1px solid var(--divider);
+  background: var(--header-bg);
+  color: var(--nav-color);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.burgerBtn:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.burgerIcon {
+  width: 22px; height: 2px; background: currentColor;
+  border-radius: 2px; position: relative;
+}
+.burgerIcon::before,
+.burgerIcon::after {
+  content: ""; position: absolute; left: 0; right: 0;
+  height: 2px; background: currentColor; border-radius: 2px;
+}
+.burgerIcon::before { top: -7px; }
+.burgerIcon::after  { top:  7px; }
+
+/* Drawer container */
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--sidebar-w);
+  background: var(--app-bg);
+  color: var(--text-color);
+  border-right: 3px solid var(--brand);
+  box-shadow: var(--sidebar-shadow);
+  transform: translate3d(-100%, 0, 0);
+  transition: transform .22s ease;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+.sidebar.is-open { transform: translate3d(0, 0, 0); }
+
+/* Sidebar sections */
+.sidebarHeader {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 14px;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--divider);
+}
+.sidebarBrand {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; color: inherit;
+}
+.sidebarLogo {
+  width: 40px; height: 40px; object-fit: contain; display: block;
+  filter: drop-shadow(var(--logo-shadow));
+}
+.sidebarTitle { margin: 0; font-size: 1.05rem; }
+
+.sidebarInner {
+  padding: 10px 10px 16px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.sidebarNav { display: grid; gap: 8px; }
+.sidebarLink {
+  text-decoration: none; color: var(--nav-color);
+  padding: 10px 12px; border-radius: 10px;
+  border: 1px solid var(--divider); background: var(--header-bg);
+}
+.sidebarLink[aria-current="page"] {
+  outline: 2px solid var(--brand); outline-offset: 2px;
+}
+.sidebarFooter {
+  margin-top: auto; padding: 12px 10px;
+  border-top: 1px solid var(--divider);
+  display: flex; gap: 8px; align-items: center; justify-content: space-between;
+}
+
+/* Backdrop for mobile */
+.backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, .35);
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s ease;
+  z-index: 900; will-change: opacity;
+  touch-action: none;
+}
+.backdrop.is-open { opacity: 1; pointer-events: auto; }
+
+/* Desktop behavior: hide slide-out UI, keep top header/nav */
+@media (min-width: 768px) {
+  .sidebar { display: none; }
+  .backdrop { display: none; }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar { transition: none; }
+  .backdrop { transition: none; }
+}
+
+/* Visibility helpers used by App.js */
+.desktop-only { display: flex; gap: 14px; align-items: center; }
+.mobile-only { display: none; }
+@media (max-width: 768px) {
+  .desktop-only { display: none; }
+  .mobile-only { display: block; }
+}
+
+/* Prevent layout width from changing when scrollbars appear/disappear */
+html { scrollbar-gutter: stable both-edges; }
+
+/* Prevent color/bg transitions on first paint */
+.no-transitions *, .no-transitions { transition: none !important; }

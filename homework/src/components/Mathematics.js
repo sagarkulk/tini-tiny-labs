@@ -158,7 +158,7 @@ export default function Mathematics() {
     }, 1000);
   };
 
-  // NEW: practice-mode stopwatch (counts up)
+  // practice-mode stopwatch (counts up)
   const startStopwatch = () => {
     stopTimer();
     setElapsed(0);
@@ -223,7 +223,6 @@ export default function Mathematics() {
       );
       startCountdown(totalSec);
     } else {
-      // start stopwatch in practice mode
       startStopwatch();
     }
   };
@@ -299,13 +298,15 @@ export default function Mathematics() {
             const correct = isCorrectAnswer(item.userAnswer, item.answer);
             return (
               <div key={idx} className={`problem ${submitted ? (correct ? "done" : "miss") : ""}`}>
-                <div className="expr">
-                  {a}
-                  <div>
-                    {operator} {b}
-                  </div>
-                  <div className="hr" />
+                {/* VERTICAL EQUATION */}
+                <div className="equation-vertical" aria-label={`${title} problem ${idx + 1}`}>
+                  <div className="ev-item">{a}</div>
+                  <div className="ev-item">{operator}</div>
+                  <div className="ev-item">{b}</div>
+                  <div className="ev-item">=</div>
                 </div>
+
+                {/* Answer on its own line (still shows tick when submitted) */}
                 <div className="answerRow">
                   <input
                     className="answerInput"
@@ -334,6 +335,7 @@ export default function Mathematics() {
                     <span className={`mark ${correct ? "ok" : "no"}`}>{correct ? "✓" : "✗"}</span>
                   )}
                 </div>
+
                 {submitted &&
                   !correct &&
                   typeof item.answer === "number" &&
