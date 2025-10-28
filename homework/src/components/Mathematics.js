@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import "../components/styles/App.Mathematics.css"
 
 const LIMITS = {
   EQUATIONS: { MIN: 1, MAX: 20 },
@@ -358,79 +359,7 @@ export default function Mathematics() {
 
   return (
     <div className="wrap">
-      <style>{`
-        .wrap { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-          background: var(--app-bg); color: var(--text-color); min-height: 100vh; padding: 16px; box-sizing: border-box; }
-        h2 { text-align: center; font-size: 1.6rem; margin-bottom: 8px; }
-
-        .statusBar { display:flex; flex-direction:column; align-items:center; gap:10px; margin-bottom:16px; }
-        .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center; }
-        .pill { padding:6px 12px; border-radius:999px; font-weight:700; border:1px solid var(--divider);
-          background: var(--header-bg); color: var(--text-color); }
-        .pillInput { width: 3.5ch; border: none; background: transparent; font: inherit; color: inherit; text-align: right; padding: 0; margin: 0 4px 0 2px; -moz-appearance: textfield; }
-        .pillInput::-webkit-outer-spin-button, .pillInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        .pillInput:focus { outline: 2px solid var(--brand); border-radius: 4px; }
-
-        .primaryBtn, .startOverBtn, .resetBtn, .submitBtn {
-          border:none; border-radius:999px; padding:10px 16px; font-weight:700; cursor:pointer;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-        }
-        .primaryBtn { background:#2563eb; color:white; }
-        .submitBtn { background:#065f46; color:white; }
-        .startOverBtn { background:#b91c1c; color:white; }
-        .resetBtn { background:#065f46; color:white; }
-
-        .progWrap { width: min(560px, 92vw); height: 10px; background: #e5e7eb; border-radius: 999px; overflow: hidden; border: 1px solid var(--divider); }
-        .progBar { height: 100%; background: #10b981; }
-
-        .groups { display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:16px; }
-        @media (max-width: 900px){ .groups { grid-template-columns: 1fr; } }
-
-        fieldset.group {
-          border:1px solid var(--divider); border-radius:12px; background: var(--header-bg); padding:0;
-          min-inline-size: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-        fieldset.group > legend { margin-left: 12px; padding: 0 6px; font-weight: 800; color: var(--text-color); }
-        .groupBody { padding: 12px; min-width: 0; }
-        fieldset.group[disabled] { opacity: .85; }
-
-        .groupGrid { display:grid; gap:10px; min-width: 0; }
-
-        .ctrlPair { display:grid; grid-template-columns: minmax(90px, 0.34fr) minmax(0, 0.66fr); align-items:center; gap:10px; min-width: 0; }
-        .ctrlPair .label { justify-self:end; text-align:right; }
-        .numberInput {
-          width:100%; max-width:100%; padding:10px 12px; border:1px solid var(--divider); border-radius:8px;
-          background: var(--header-bg); color: var(--text-color); box-sizing: border-box; min-width:0;
-          -webkit-appearance: none; appearance: none;
-        }
-        .numberInput:focus { outline: 2px solid var(--brand); outline-offset: 2px; }
-        .ctrlPair .checkInput { justify-self:start; width:22px; height:22px; }
-
-        @media (max-width: 560px){ .ctrlPair { grid-template-columns: 1fr; } .ctrlPair .label { justify-self:start; text-align:left; } }
-
-        .opGrid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:8px; }
-        @media (max-width: 420px){ .opGrid { grid-template-columns: 1fr; } }
-        .opItem { display:flex; align-items:center; gap:8px; padding:8px 10px; border:1px solid var(--divider); border-radius:8px; background: var(--header-bg); min-width: 0; }
-
-        .columns { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
-        .card { background: var(--header-bg); padding:12px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.08); border:1px solid var(--divider); }
-        .cardTitle { text-align:center; margin-bottom:10px; }
-        .cardGrid { display:grid; gap:10px; }
-        .expr { font-size:20px; width:90px; margin:auto; text-align:right; }
-        .hr { border-top:2px solid currentColor; opacity:.6; margin-top:2px; }
-        .answerRow { display:flex; align-items:center; justify-content:center; gap:8px; }
-        .answerInput { width:120px; padding:10px 12px; font-size:18px; border-radius:8px; border:1px solid var(--divider); background: var(--header-bg); color: var(--text-color); box-sizing: border-box; text-align: right; }
-        .answerInput:focus { outline: 2px solid var(--brand); outline-offset: 2px; }
-        .mark.ok { color:#16a34a; } .mark.no { color:#dc2626; }
-        .problem.done { outline:1px solid #16a34a22; border-radius:8px; }
-        .problem.miss { outline:1px solid #dc262622; border-radius:8px; }
-        .hint { font-size:12px; opacity:0.8; text-align:center; }
-
-        .summary { display:flex; flex-direction:column; gap:8px; align-items:center; margin: 8px 0 16px; }
-        .summary .big { font-weight: 800; font-size: 1.2rem; }
-      `}</style>
-
-      <h2>Mathematics Practice</h2>
+      <h2>🧮 Mathematics Practice</h2>
 
       <div className="statusBar">
         <div className="row" role="status" aria-live="polite">
