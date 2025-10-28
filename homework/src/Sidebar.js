@@ -39,25 +39,21 @@ export default function Sidebar({ open, onClose, ThemeToggle, theme, onToggleThe
                 tabIndex={-1}
             >
                 <div className="sidebarHeader">
-                    <NavLink
-                        to="/homework"
-                        className="sidebarBrand"
-                        aria-label="Tini-Tiny Labs home"
-                        onClick={onClose}
-                    >
-                        <img
-                            className="sidebarLogo"
-                            src="/logo-transparent.png"
-                            srcSet="/logo-transparent.png 2x, /icon-512.png 3x"
-                            alt="Tini-Tiny Labs"
-                            width="40"
-                            height="40"
-                            decoding="async"
-                        />
-                        <h1 className="sidebarTitle">Tini-Tiny Labs</h1>
+                    <NavLink to="/homework" className="brandLink" aria-label="Tini-Tiny Labs home">
+                        <span className="brandBadge">
+                            <img
+                                src="/logo-transparent.png"
+                                srcSet="/logo-transparent.png 2x, /icon-512.png 3x"
+                                alt="Tini-Tiny Labs"
+                                className="brandLogo"
+                                width="44"
+                                height="44"
+                                decoding="async"
+                            />
+                        </span>
+                        <h1 className="brandText">Tini-Tiny Labs</h1>
                     </NavLink>
                 </div>
-
                 <div className="sidebarInner">
                     <nav className="sidebarNav" aria-label="Primary">
                         <NavLink to="/homework" end className="sidebarLink" ref={firstLinkRef} onClick={onClose}>

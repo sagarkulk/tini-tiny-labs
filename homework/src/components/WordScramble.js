@@ -6,7 +6,6 @@ const SHOW_SECONDS = 10;
 const SUCCESS_DELAY = 5;
 const FS_MIN = 16;
 const FS_MAX = 44;
-const GAP_PX = 10;
 
 const DM_MASKS = {
     easy: ["???", "????", "?????"],
@@ -110,12 +109,16 @@ export default function WordScramble() {
     const [countdown, setCountdown] = useState(SHOW_SECONDS);
     const [successCountdown, setSuccessCountdown] = useState(0);
     const [inSuccess, setInSuccess] = useState(false);
+
+    // adaptive sizing
     const [fitFontSize, setFitFontSize] = useState(32);
+    const [fitGap, setFitGap] = useState(6);
+
     const [isTouch, setIsTouch] = useState(false);
     const [roundKey, setRoundKey] = useState(0);
     const [canShowScramble, setCanShowScramble] = useState(false);
 
-    // NEW: reserve height to avoid scrollbar flicker
+    // reserve height to avoid flicker/scrollbar while switching views
     const [reservedHeight, setReservedHeight] = useState(0);
 
     const loadingRef = useRef(false);
@@ -125,8 +128,8 @@ export default function WordScramble() {
     const successTimeout = useRef(null);
     const successInterval = useRef(null);
 
-    const containerRef = useRef(null);       // width fit
-    const scrambleWrapRef = useRef(null);    // height reservation target
+    const containerRef = useRef(null);
+    const scrambleWrapRef = useRef(null);
 
     useEffect(() => {
         setIsTouch(
@@ -156,13 +159,10 @@ export default function WordScramble() {
         setSuccessCountdown(0);
         safeClearTimers();
 
-        // Reserve current scramble height BEFORE we change anything
         if (scrambleWrapRef.current) {
             const h = scrambleWrapRef.current.offsetHeight || 0;
             if (h > 0) setReservedHeight(h);
         }
-
-        // Keep old content mounted until new is ready; don't clear yet
 
         const myRound = activeRoundRef.current + 1;
         activeRoundRef.current = myRound;
@@ -182,14 +182,12 @@ export default function WordScramble() {
             return;
         }
 
-        // Switch to reveal of new word
         setWordData(data);
         setCountdown(SHOW_SECONDS);
         setRoundKey((k) => k + 1);
         setShowWord(true);
-        setCanShowScramble(false); // hide scramble, but height stays due to reservedHeight
+        setCanShowScramble(false);
 
-        // Prepare scramble for the new word
         let nextScramble;
         try {
             nextScramble = scramble(data.word);
@@ -207,14 +205,12 @@ export default function WordScramble() {
         }
         setScrambled(nextScramble);
 
-        // Fit → end reveal → show scramble; then release height reservation
         requestAnimationFrame(() => {
             doFit();
             revealTimeout.current = setTimeout(() => {
                 if (myRound !== activeRoundRef.current) return;
                 setShowWord(false);
                 setCanShowScramble(true);
-                // Release after we’re fully visible again
                 setTimeout(() => setReservedHeight(0), 0);
             }, SHOW_SECONDS * 1000);
         });
@@ -230,22 +226,28 @@ export default function WordScramble() {
         return () => clearInterval(id);
     }, [showWord, wordData?.word]);
 
+    // Character-aware fitting to keep up to ~10 chars on one line (SE included)
     const doFit = useDebounced(() => {
         if (!containerRef.current || !wordData?.word) return;
+
         const cw = containerRef.current.clientWidth;
-        const letters = wordData.word.length;
-        const PAD_X = 24 * 2;
-        const gap = GAP_PX;
-        const fitsAt = (fs) => {
-            const cubeWidth = fs * 0.65 + PAD_X;
-            const total = cubeWidth * letters + gap * (letters - 1);
-            return total <= cw;
-        };
-        let chosen = FS_MIN;
-        for (let fs = FS_MAX; fs >= FS_MIN; fs--) {
-            if (fitsAt(fs)) { chosen = fs; break; }
-        }
-        setFitFontSize(chosen);
+        const n = Math.max(1, wordData.word.length);
+
+        // per-tile inline width mirrors CSS: inline-size = 0.65 * fs + 40
+        // total width = n * (0.65*fs + 40) + gap * (n - 1) <= cw
+
+        // gap shrinks with length, but stays readable
+        const targetGap = Math.max(2, Math.min(8, 10 - Math.floor(n / 2)));
+
+        const usable = cw - n * 40 - targetGap * (n - 1);
+        const fsByWidth = usable / (0.65 * n);
+
+        // small bonus for very short words; clamp into FS range
+        const bonus = n <= 5 ? 6 : 0;
+        const desired = Math.max(FS_MIN, Math.min(FS_MAX, Math.floor(fsByWidth + bonus)));
+
+        setFitFontSize(desired);
+        setFitGap(targetGap);
     }, 120);
 
     useEffect(() => {
@@ -274,16 +276,13 @@ export default function WordScramble() {
             setSelected(null);
             setDragged(null);
 
-            // Reserve height during success phase
             if (scrambleWrapRef.current) {
                 const h = scrambleWrapRef.current.offsetHeight || 0;
                 if (h > 0) setReservedHeight(h);
             }
 
-            // Keep green tiles visible
             setInSuccess(true);
             setShowWord(false);
-            // DO NOT setCanShowScramble(false) — we want tiles visible
 
             setSuccessCountdown(SUCCESS_DELAY);
             successInterval.current = setInterval(
@@ -356,7 +355,6 @@ export default function WordScramble() {
                     className="word-section"
                     style={{
                         opacity: loading ? 0.85 : 1,
-                        // NEW: pin height & avoid scroll anchoring during transitions
                         minHeight: reservedHeight ? reservedHeight : undefined,
                         overflow: reservedHeight ? "hidden" : undefined,
                         overflowAnchor: "none",
@@ -373,7 +371,6 @@ export default function WordScramble() {
                         </div>
                     )}
 
-                    {/* Keep wrapper mounted and measurable */}
                     <div
                         ref={scrambleWrapRef}
                         className={`scramble-wrap ${!showWord && canShowScramble ? "on" : "off"}`}
@@ -391,7 +388,7 @@ export default function WordScramble() {
                                     key={roundKey}
                                     className="scramble-container"
                                     ref={containerRef}
-                                    style={{ "--gap": `${GAP_PX}px`, "--fs": `${fitFontSize}px` }}
+                                    style={{ "--gap": `${fitGap}px`, "--fs": `${fitFontSize}px` }}
                                 >
                                     {scrambled.map((item, index) => {
                                         const sel = selected === index;
