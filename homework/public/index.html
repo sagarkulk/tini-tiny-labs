@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <!-- Google Analytics 4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QVYWG4B7B3"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
+    function gtag(){ dataLayer.push(arguments); }
     gtag('js', new Date());
-    // We send SPA pageviews manually via RouteChangeTracker
+    // SPA pageviews sent manually via RouteChangeTracker
     gtag('config', 'G-QVYWG4B7B3', { send_page_view: false });
   </script>
 
@@ -19,9 +18,10 @@
       var p = params.get("p");
       if (!p) return;
 
-      var BASE = "/tini-tiny-labs"; // set to "" when you move to custom-domain root
+      // If deploying at https://<user>.github.io/<repo>, set BASE = "/<repo>"
+      // If using a custom domain/root, set BASE = "".
+      var BASE = "/tini-tiny-labs";
 
-      // If p already starts with BASE, don't prepend it again
       var baseNoSlash = BASE.replace(/\/$/, "");
       var nextUrl = p.startsWith(baseNoSlash + "/") ? p : baseNoSlash + p;
 
@@ -29,14 +29,55 @@
     })();
   </script>
 
+  <!-- Apply theme BEFORE first paint to avoid white flash -->
+  <script>
+    try {
+      var saved = localStorage.getItem("theme");
+      var theme = (saved === "light" || saved === "dark")
+        ? saved
+        : (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+      var root = document.documentElement;
+      root.setAttribute("data-theme", theme);
+      root.style.backgroundColor = theme === "dark" ? "#1F2937" : "#F8FAFC";
+      root.style.colorScheme = theme === "dark" ? "dark" : "light";
+
+      var meta = document.querySelector('meta[name="theme-color"]') || document.createElement("meta");
+      meta.name = "theme-color";
+      meta.content = theme === "dark" ? "#1F2937" : "#ffffff";
+      if (!meta.parentNode) document.head.appendChild(meta);
+
+      // Disable transitions/animations during the very first paint
+      root.classList.add("no-transitions");
+      requestAnimationFrame(function () { root.classList.remove("no-transitions"); });
+    } catch (e) {}
+  </script>
+
+  <!-- Minimal CSS to support first-paint stability on mobile -->
+  <style>
+    /* Prevents CSS transitions/animations flash before React hydrates */
+    .no-transitions *, .no-transitions *::before, .no-transitions *::after {
+      transition: none !important;
+      animation: none !important;
+    }
+    /* Ensure full-height layout for safe viewport on mobile */
+    html, body, #root { height: 100%; }
+  </style>
+
+  <meta name="color-scheme" content="light dark">
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
   <title>Homework App</title>
+
+  <!-- Fonts (swap avoids FOIT; preconnect reduces latency) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Icons/manifest (these %PUBLIC_URL% paths are fine for CRA/Pages) -->
+  <!-- Icons/manifest -->
   <link rel="icon" href="%PUBLIC_URL%/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32.png">
   <link rel="icon" type="image/png" sizes="48x48" href="%PUBLIC_URL%/favicon-48.png">
@@ -44,10 +85,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/favicon-180.png">
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
 </head>
-
 <body>
   <div id="root"></div>
-  <!-- Your React bundle scripts will be injected here by the build -->
+  <!-- React bundle injected by the build -->
 </body>
-
 </html>

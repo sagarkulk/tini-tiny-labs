@@ -1,298 +1,236 @@
-/* layout + theme hooks */
 .container {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  background: var(--app-bg);
-  color: var(--text-color);
-  min-height: 100vh;
-  padding: 16px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+	font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+	background: var(--app-bg);
+	color: var(--text-color);
+	padding: calc(env(safe-area-inset-top, 0) + 16px) 8px calc(env(safe-area-inset-bottom, 0) + 16px);
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	-webkit-tap-highlight-color: transparent;
 }
 
 h2 {
-  text-align: center;
-  font-size: 1.6rem;
-  margin-bottom: 8px;
-}
-
-.title {
-  font-size: 32px;
-  color: var(--brand, #ff6600);
-  text-align: center;
+	text-align: center;
+	font-size: clamp(18px, 5.2vw, 26px);
+	margin-bottom: 8px;
 }
 
 .controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  margin: 10px 0 20px;
-  font-size: 18px;
-  color: var(--text-color);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	margin: 10px 0 20px;
+	font-size: clamp(14px, 3.6vw, 18px);
+	color: var(--text-color);
+	flex-wrap: wrap;
+}
+
+.controls select,
+.controls input[type="checkbox"],
+.button {
+	min-height: 40px;
 }
 
 .word-section {
-  margin: 20px auto;
-  max-width: 700px;
-  text-align: center;
-  min-block-size: clamp(260px, 40vh, 420px);
+	margin: 20px auto;
+	max-width: 700px;
+	text-align: center;
+	min-block-size: clamp(220px, 38vh, 420px);
 }
 
-/* keep scramble mounted; reserve space so reveal doesn't shift */
 .scramble-wrap {
-  position: relative;
-  min-height: calc(var(--fs, 24px) * 1.8 + 16px);
+	position: relative;
+	min-height: calc(var(--fs, 22px) * 1.8 + 16px);
+	width: 100%;
 }
 
 .scramble-wrap.off {
-  visibility: hidden;
-  pointer-events: none;
+	visibility: hidden;
+	pointer-events: none;
 }
 
 .scramble-wrap.on {
-  visibility: visible;
+	visibility: visible;
 }
 
 .show-word {
-  font-size: 42px;
-  color: #111;
-  padding: 10px 20px;
-  border-radius: 12px;
-  background: linear-gradient(90deg, var(--accent-soft-from, #fffa87), var(--accent-soft-to, #ffe487));
-  box-shadow: var(--glow, 0 0 15px rgba(255, 210, 100, 0.6));
-  display: inline-block;
-  text-align: center;
-  margin: 0 auto;
-  animation: blink 2s ease-in-out infinite alternate;
-  line-height: 1;
+	font-size: clamp(20px, 9.5vw, 44px);
+	color: #111;
+	padding: 8px 16px;
+	border-radius: 10px;
+	background: linear-gradient(90deg, var(--accent-soft-from, #fffa87), var(--accent-soft-to, #ffe487));
+	box-shadow: 0 0 15px rgba(255, 210, 100, 0.6);
+	display: inline-block;
+	text-align: center;
+	margin: 0 auto;
+	animation: blink 2s ease-in-out infinite alternate;
+	line-height: 1.1;
 }
 
 @keyframes blink {
-  from {
-    opacity: 1
-  }
+	from {
+		opacity: 1;
+	}
 
-  to {
-    opacity: .7
-  }
-}
-
-.scramble-title {
-  margin-top: 30px;
-  color: var(--text-color);
-  text-align: center;
+	to {
+		opacity: 0.7;
+	}
 }
 
 .word-wrap {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px; /* keeps hint directly under the word */
-}
-
-.word.show-word {
-  margin: 0;            /* prevent extra gap above/below the word */
-  line-height: 1.1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+	position: relative;
 }
 
 .hint-text {
-  text-align: center;
-  font-size: 14px;
-  font-style: italic;
-  color: #555;
-  opacity: 0.9;
-  margin: 0;            /* ensure it's tight under the word */
+	text-align: center;
+	font-size: 13px;
+	font-style: italic;
+	color: #555;
+	opacity: 0.9;
+	margin: 0;
 }
 
 .countdown-badge {
-  position: absolute;   /* <-- key change so it doesn't push the hint */
-  top: -6px;
-  right: -6px;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: var(--header-bg, #eee);
-  border: 1px solid var(--divider, #ddd);
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 1;
-}
-
-@media (max-width: 420px) {
-  .countdown-badge {
-    top: -8px;
-    right: -8px;
-    width: 28px;
-    height: 28px;
-    font-size: 13px;
-  }
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	width: 22px;
+	height: 22px;
+	border-radius: 999px;
+	background: var(--header-bg, #eee);
+	border: 1px solid var(--divider, #ddd);
+	font-weight: 800;
+	font-size: 11px;
+	line-height: 22px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .scramble-container {
-  display: flex;
-  gap: var(--gap, 10px);
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: center;
-  margin: 20px 0;
-  overflow: visible;
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	gap: var(--gap, 4px);
+	margin: 12px auto;
+	overflow-x: hidden;
+	max-width: 100%;
+	touch-action: manipulation;
 }
 
-
-.no-scroll {
-  overflow: hidden;
-}
-
-html,
-body,
-.container {
-  scrollbar-gutter: stable both-edges;
-}
-
-/* Letter cubes – stabilize size using --fs so they don't shift on reveal */
 .letter {
-  font-size: var(--fs, 32px);
-  line-height: 1;
-  inline-size: calc(var(--fs, 32px) * 0.65 + 48px);
-  block-size: calc(var(--fs, 32px) * 1.4 + 24px);
-  padding: 12px 24px;
-  border-radius: 12px;
-  font-weight: 800;
-  user-select: none;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #ffeb99;
-  color: #111 !important;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-@media (pointer: fine) {
-  .letter {
-    cursor: grab;
-  }
-}
-
-@media (pointer: coarse) {
-  .letter {
-    cursor: default;
-  }
+	--fs: clamp(10px, 4.6vw, 22px);
+	font-size: var(--fs);
+	inline-size: calc(var(--fs) * 0.65 + 40px);
+	block-size: calc(var(--fs) * 1.35 + 20px);
+	padding: 10px 18px;
+	border-radius: 10px;
+	font-weight: 800;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #ffeb99;
+	color: #111 !important;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+	transition: transform 0.1s ease, background-color 0.1s ease;
+	user-select: none;
 }
 
 .letter.correct {
-  background-color: #8fcf68;
-  color: #111 !important;
-  animation: pulse .6s ease-in-out;
+	background-color: #8fcf68;
+	color: #111 !important;
+	animation: pulse 0.4s ease-in-out;
 }
 
 @keyframes pulse {
-  0% {
-    transform: scale(1)
-  }
+	0% {
+		transform: scale(1);
+	}
 
-  50% {
-    transform: scale(1.12)
-  }
+	50% {
+		transform: scale(1.05);
+	}
 
-  100% {
-    transform: scale(1)
-  }
+	100% {
+		transform: scale(1);
+	}
 }
 
-/* Image + definition styling (responsive, no layout jump) */
-.image {
-  width: 100%;
-  max-width: 700px;
-  aspect-ratio: 4 / 3;
-  height: auto;
-  border-radius: 20px;
-  object-fit: cover;
-  margin: 10px auto;
-  display: block;
-  background: var(--header-bg, #f3f4f6);
-  box-shadow: var(--shadow-1, 0 2px 6px rgba(0, 0, 0, 0.06));
-}
-
-.meaning,
-.definition {
-  font-size: 18px;
-  color: var(--text-color);
-  text-align: center;
-  font-style: italic;
-  margin-top: 12px;
-}
-
-/* Button */
-.button {
-  border: none;
-  border-radius: 999px;
-  padding: 10px 16px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: var(--shadow-1, 0 2px 6px rgba(0, 0, 0, 0.06));
-  background: var(--btn-primary, var(--brand));
-  color: var(--btn-fg, #fff);
+.meaning {
+	font-size: 16px;
+	color: var(--text-color);
+	text-align: center;
+	font-style: italic;
+	margin-top: 8px;
 }
 
 .button {
-  min-width: 160px;
-  position: relative;
+	border: none;
+	border-radius: 999px;
+	padding: 8px 14px;
+	font-weight: 700;
+	cursor: pointer;
+	background: var(--btn-primary, var(--brand));
+	color: var(--btn-fg, #fff);
+	min-width: 140px;
 }
 
-.button .btn-spin {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  margin-left: 8px;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  vertical-align: -2px;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Loading text (rarely used now) */
 .loading {
-  text-align: center;
-  margin-top: 100px;
-  font-size: 24px;
-  color: var(--text-color);
+	text-align: center;
+	margin-top: 80px;
+	font-size: 20px;
+	color: var(--text-color);
 }
 
-/* Accessibility: respect reduced motion */
+.ws .word-section,
+.ws .scramble-container,
+.ws .scramble-wrap {
+	max-width: 100%;
+	overflow: hidden;
+}
+
+.ws .word-section {
+	overflow-anchor: none;
+}
+
+html,
+body {
+	overflow-x: hidden;
+	scrollbar-gutter: stable both-edges;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .show-word {
-    animation: none;
-  }
 
-  .letter.correct {
-    animation: none;
-  }
-
-  .button .btn-spin {
-    animation: none;
-  }
+	.show-word,
+	.letter.correct {
+		animation: none;
+	}
 }
 
-@media (max-width: 360px) {
-  .scramble-container {
-    gap: calc(var(--gap, 10px) * 0.75);
-  }
+@media (max-width: 420px) {
+	.letter {
+		--fs: clamp(9px, 4vw, 20px);
+		inline-size: calc(var(--fs) * 0.6 + 34px);
+		block-size: calc(var(--fs) * 1.2 + 16px);
+		padding: 8px 14px;
+	}
 
-  .letter {
-    inline-size: calc(var(--fs, 28px) * 0.65 + 42px);
-    block-size: calc(var(--fs, 28px) * 1.35 + 20px);
-    padding: 10px 20px;
-  }
+	.scramble-container {
+		gap: var(--gap, 3px);
+	}
+
+	.hint-text {
+		font-size: 12px;
+	}
+
+	.show-word {
+		font-size: clamp(16px, 8vw, 32px);
+	}
 }
-
