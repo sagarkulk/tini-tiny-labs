@@ -1,0 +1,127 @@
+.feedbackWrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+  color: var(--text-color);
+}
+
+.feedbackHead {
+  text-align: center;
+  margin: 0 0 6px;
+  font-size: clamp(20px, 6vw, 32px);
+  font-weight: 800;
+}
+
+.feedbackSub {
+  text-align: center;
+  opacity: 0.85;
+  margin: 0 0 16px;
+  font-size: clamp(14px, 3.8vw, 18px);
+}
+
+.feedbackForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--header-bg);
+  border: 1px solid var(--divider);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: var(--shadow-1);
+}
+
+.feedbackCtrl {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.feedbackLabel {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.feedbackInput {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--divider);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 16px;
+  background: var(--header-bg);    
+  color: var(--text-color);
+  outline: none;            
+  text-align: left;
+}
+
+.feedbackInput::placeholder { color: color-mix(in oklab, var(--text-color) 55%, transparent); }
+
+.feedbackInput:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+textarea.feedbackInput {
+  min-height: 130px;
+  resize: vertical;
+  text-align: left;
+}
+
+.feedbackActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.primaryBtn {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: var(--btn-primary);
+  color: var(--btn-fg);
+  min-height: 44px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-1);
+  transition: background .15s ease, opacity .15s ease;
+}
+.primaryBtn:hover { background: var(--brand-700); }
+.primaryBtn[disabled] { opacity: .5; cursor: not-allowed; }
+
+.feedbackMsg {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  padding: 6px 12px;
+  border: 1px solid var(--divider);
+  background: var(--header-bg);
+  color: var(--text-color);
+  font-weight: 700;
+  font-size: 14px;
+}
+.feedbackMsg.ok { color: var(--ok); }
+.feedbackMsg.err { color: var(--no); }
+
+.feedbackTip {
+  font-size: 12px;
+  opacity: .7;
+  margin-top: 12px;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .primaryBtn { width: 100%; }
+}
+
+.feedbackInput:-webkit-autofill,
+.feedbackInput:-webkit-autofill:hover,
+.feedbackInput:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text-color);
+  transition: background-color 9999s ease-in-out 0s;
+  box-shadow: 0 0 0px 1000px var(--header-bg) inset;
+}
+
+.feedbackInput:-moz-ui-invalid { box-shadow: none; }
