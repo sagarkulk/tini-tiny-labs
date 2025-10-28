@@ -1,0 +1,11 @@
+{
+  "editor.detectIndentation": false,
+  "editor.insertSpaces": false,
+  "editor.tabSize": 4,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.autoIndent": "full",
+    "editor.formatOnType": true,
+    "editor.formatOnPaste": true
+  }
+}

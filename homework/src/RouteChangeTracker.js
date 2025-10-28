@@ -3,17 +3,17 @@ import { useLocation } from 'react-router-dom';
 import { trackPageView } from './analytics';
 
 export default function RouteChangeTracker({ base = '' }) {
-    const location = useLocation();
+	const location = useLocation();
 
-    useEffect(() => {
-        const path =
-            base.replace(/\/$/, '') +
-            location.pathname +
-            location.search +
-            location.hash;
+	useEffect(() => {
+		const path =
+			base.replace(/\/$/, '') +
+			location.pathname +
+			location.search +
+			location.hash;
 
-        trackPageView(path); // <-- sends event to GA4
-    }, [location, base]);
+		trackPageView(path); // <-- sends event to GA4
+	}, [location, base]);
 
-    return null;
+	return null;
 }
