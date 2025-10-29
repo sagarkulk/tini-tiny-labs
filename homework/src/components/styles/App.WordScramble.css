@@ -37,15 +37,21 @@ h2 {
 	margin: 20px auto;
 	max-width: 700px;
 	text-align: center;
-	min-block-size: clamp(220px, 38vh, 420px);
+	/* slightly larger floor to absorb definition+info height safely */
+	min-block-size: clamp(260px, 42vh, 480px);
 	overflow-anchor: none;
-	contain: layout;
+	/* stronger containment to avoid cross-layout invalidation */
+	contain: layout paint style;
+	will-change: min-height;
 }
 
 .scramble-wrap {
 	position: relative;
 	min-height: calc(var(--fs, 22px) * 1.8 + 16px);
 	width: 100%;
+	/* layer promotion to reduce flicker on view swap */
+	transform: translateZ(0);
+	backface-visibility: hidden;
 }
 
 .scramble-wrap.off {
@@ -86,6 +92,27 @@ h2 {
 	position: relative;
 }
 
+/* definition line */
+.meaning {
+	font-size: 16px;
+	color: var(--text-color);
+	text-align: center;
+	font-style: italic;
+	margin-top: 8px;
+	/* reserve at least one line to prevent height snap */
+	min-height: 1.25em;
+}
+
+/* optional "(more info: ...)" line will share the same styling */
+.info-line {
+	font-size: 14px;
+	font-style: italic;
+	opacity: 0.9;
+	margin: 2px 0 0;
+	/* reserve a line even if text is short */
+	min-height: 1.2em;
+}
+
 .hint-text {
 	text-align: center;
 	font-size: 13px;
@@ -110,6 +137,7 @@ h2 {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	z-index: 1;
 }
 
 .scramble-container {
@@ -123,6 +151,7 @@ h2 {
 	max-width: 100%;
 	touch-action: manipulation;
 	contain: layout paint;
+	backface-visibility: hidden;
 }
 
 .letter {
@@ -139,10 +168,10 @@ h2 {
 	background-color: #ffeb99;
 	color: #111 !important;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-	/* Important: no background-color transition to avoid green→yellow blend flicker */
 	transition: transform 0.1s ease;
 	will-change: transform;
 	user-select: none;
+	touch-action: manipulation;
 }
 
 .letter.correct {
@@ -155,14 +184,6 @@ h2 {
 	0% { transform: scale(1); }
 	50% { transform: scale(1.05); }
 	100% { transform: scale(1); }
-}
-
-.meaning {
-	font-size: 16px;
-	color: var(--text-color);
-	text-align: center;
-	font-style: italic;
-	margin-top: 8px;
 }
 
 .button {
@@ -226,4 +247,5 @@ body {
 		font-size: clamp(16px, 8vw, 32px);
 	}
 }
-.scramble-container { backface-visibility: hidden; }
+
+.info-line { font-style: italic; margin-bottom: 8px; }
