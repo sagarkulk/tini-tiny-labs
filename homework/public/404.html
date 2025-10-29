@@ -1,28 +1,31 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Redirecting…</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="refresh" content="0; url=/" />
-    <style>
-      body {
-        margin: 0;
-        height: 100dvh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-        background: #f8fafc;
-        color: #111827;
-        font-size: clamp(14px, 4vw, 18px);
-        text-align: center;
-      }
-    </style>
-    <script>
-      if (!/\/$/.test(location.pathname)) location.replace("/");
-      else location.replace("/");
-    </script>
-  </head>
-  <body>Redirecting…</body>
+	<head>
+		<meta charset="utf-8" />
+		<title>Redirecting…</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<style>
+			body {
+				margin: 0;
+				height: 100dvh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+				background: #f8fafc;
+				color: #111827;
+				font-size: clamp(14px, 4vw, 18px);
+				text-align: center;
+			}
+		</style>
+		<script>
+			// Preserve the full path/query/hash and redirect to root as ?p=
+			(function () {
+				var full = location.pathname + location.search + location.hash;
+				var next = "/?p=" + encodeURIComponent(full);
+				location.replace(next);
+			})();
+		</script>
+	</head>
+	<body>Redirecting…</body>
 </html>
