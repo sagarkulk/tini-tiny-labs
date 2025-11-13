@@ -177,7 +177,8 @@ h2 {
 	gap: 16px;
 	margin: 12px auto 8px;
 	max-width: 1200px;
-	grid-template-columns: 1fr;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 300px));
+	justify-content: center; 
 }
 
 .card {
@@ -322,7 +323,7 @@ h2 {
 		transition: none;
 	}
 }
-
+/*
 @media (min-width: 640px) {
 	.columns {
 		grid-template-columns: 1fr 1fr;
@@ -334,7 +335,7 @@ h2 {
 		grid-template-columns: repeat(4, 1fr);
 	}
 }
-
+*/
 @media (max-width: 680px) {
 	.opGrid {
 		grid-template-columns: repeat(2, 1fr);

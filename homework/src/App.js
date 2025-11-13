@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation, useNavigate } from "react-router-dom";
-import Home from "./components/Home";
-import Mathematics from "./components/Mathematics";
-import WordScramble from "./components/WordScramble";
-import Feedback from "./components/Feedback";
+import {
+	BrowserRouter,
+	Routes,
+	Route,
+	NavLink,
+	Navigate,
+	useLocation,
+	useNavigate,
+} from "react-router-dom";
 import RouteChangeTracker from "./RouteChangeTracker";
 import Sidebar from "./Sidebar";
+import { routesConfig } from "./routesConfig"; // ✅ import route config
 import "./App.css";
 
+/* ---------- Theme Toggle ---------- */
 function ThemeToggle({ theme, onToggle }) {
 	return (
 		<button
@@ -22,7 +28,7 @@ function ThemeToggle({ theme, onToggle }) {
 	);
 }
 
-// Must be used *inside* Router
+/* ---------- Lowercase Redirect ---------- */
 function LowercaseRedirect() {
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -35,7 +41,7 @@ function LowercaseRedirect() {
 	return null;
 }
 
-/* ---------- Outer component: provides Router ---------- */
+/* ---------- App ---------- */
 export default function App() {
 	return (
 		<BrowserRouter>
@@ -44,28 +50,34 @@ export default function App() {
 	);
 }
 
-/* ---------- Inner component: safe to use router hooks here ---------- */
+/* ---------- AppShell ---------- */
 function AppShell() {
 	const getInitial = () => {
 		const saved = localStorage.getItem("theme");
 		if (saved === "light" || saved === "dark") return saved;
-		return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+		return window.matchMedia("(prefers-color-scheme: dark)").matches
+			? "dark"
+			: "light";
 	};
 
 	const [theme, setTheme] = useState(getInitial);
 	const [menuOpen, setMenuOpen] = useState(false);
 	const location = useLocation();
 
-	// Apply theme & theme-color
+	// Apply theme to <html>
 	useEffect(() => {
 		document.documentElement.setAttribute("data-theme", theme);
 		localStorage.setItem("theme", theme);
 		let meta = document.querySelector('meta[name="theme-color"]');
-		if (!meta) { meta = document.createElement("meta"); meta.name = "theme-color"; document.head.appendChild(meta); }
+		if (!meta) {
+			meta = document.createElement("meta");
+			meta.name = "theme-color";
+			document.head.appendChild(meta);
+		}
 		meta.setAttribute("content", theme === "dark" ? "#1F2937" : "#ffffff");
 	}, [theme]);
 
-	// Lock body scroll when sidebar is open (mobile)
+	// Lock scroll when sidebar open
 	useEffect(() => {
 		if (!menuOpen) return;
 		const scrollY = window.scrollY || document.documentElement.scrollTop;
@@ -91,21 +103,25 @@ function AppShell() {
 	// Auto-close sidebar on route change
 	useEffect(() => {
 		if (menuOpen) setMenuOpen(false);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.pathname]);
+
+	// Filter routes for top nav and app routes
+	const topNavRoutes = routesConfig.filter((r) => r.showInTopMenu);
+	const appRoutes = routesConfig.filter((r) => r.showInAppRoutes);
 
 	return (
 		<>
 			<LowercaseRedirect />
 			<RouteChangeTracker />
 
-			{/* Sidebar (add id="sidebar" to its root inside Sidebar.jsx for aria-controls) */}
 			<Sidebar
 				open={menuOpen}
 				onClose={() => setMenuOpen(false)}
 				ThemeToggle={ThemeToggle}
 				theme={theme}
-				onToggleTheme={() => setTheme(t => (t === "light" ? "dark" : "light"))}
+				onToggleTheme={() =>
+					setTheme((t) => (t === "light" ? "dark" : "light"))
+				}
 			/>
 
 			<div className="app-shell">
@@ -113,7 +129,6 @@ function AppShell() {
 				<header className="app-header">
 					<div className="header-inner">
 						<div className="header-left">
-							{/* Burger — mobile only (hidden on desktop via CSS) */}
 							<div className="mobile-only">
 								<button
 									className="burgerBtn"
@@ -127,8 +142,11 @@ function AppShell() {
 								</button>
 							</div>
 
-							{/* Brand (logo + text) */}
-							<NavLink to="/homework" className="brandLink" aria-label="Tini-Tiny Labs home">
+							<NavLink
+								to="/homework"
+								className="brandLink"
+								aria-label="Tini-Tiny Labs home"
+							>
 								<span className="brandBadge">
 									<img
 										src="/logo-transparent.png"
@@ -144,31 +162,45 @@ function AppShell() {
 							</NavLink>
 						</div>
 
-						{/* Desktop nav — visible only on larger screens */}
+						{/* Top menu - dynamic */}
 						<nav className="nav desktop-only" aria-label="Primary">
-							<NavLink to="/homework">Home</NavLink>
-							<NavLink to="/homework/mathematics">Mathematics</NavLink>
-							<NavLink to="/homework/wordscramble">Word Scramble</NavLink>
-							<NavLink to="/homework/feedback">Feedback</NavLink>
+							{topNavRoutes.map((r) => (
+								<NavLink key={r.path} to={r.path}>
+									{r.label}
+								</NavLink>
+							))}
 						</nav>
 
 						<div className="header-right">
-							<ThemeToggle theme={theme} onToggle={() => setTheme(t => (t === "light" ? "dark" : "light"))} />
+							<ThemeToggle
+								theme={theme}
+								onToggle={() =>
+									setTheme((t) => (t === "light" ? "dark" : "light"))
+								}
+							/>
 						</div>
 					</div>
 				</header>
 
-				{/* Main */}
+				{/* Main content */}
 				<main className="app-main" id="main">
 					<Routes>
 						<Route path="/" element={<Navigate to="/homework" replace />} />
-						<Route path="/homework" element={<Home />} />
-						<Route path="/homework/mathematics" element={<Mathematics />} />
-						<Route path="/homework/wordscramble" element={<WordScramble />} />
-						<Route path="/homework/feedback" element={<Feedback />} />
-						<Route path="/index.html" element={<Navigate to="/homework" replace />} />
-						<Route path="/404.html" element={<Navigate to="/homework" replace />} />
-						<Route path="*" element={<div style={{ padding: 16 }}>404 Not Found</div>} />
+						{appRoutes.map(({ path, element }) => (
+							<Route key={path} path={path} element={element} />
+						))}
+						<Route
+							path="/index.html"
+							element={<Navigate to="/homework" replace />}
+						/>
+						<Route
+							path="/404.html"
+							element={<Navigate to="/homework" replace />}
+						/>
+						<Route
+							path="*"
+							element={<div style={{ padding: 16 }}>404 Not Found</div>}
+						/>
 					</Routes>
 				</main>
 
@@ -176,7 +208,9 @@ function AppShell() {
 				<footer className="app-footer">
 					<div className="footer-inner">
 						<nav className="footer-nav" aria-label="Bottom toolbar">
-							<NavLink to="/homework/feedback" className="footer-link">Feedback</NavLink>
+							<NavLink to="/homework/feedback" className="footer-link">
+								Feedback
+							</NavLink>
 						</nav>
 						<p>© {new Date().getFullYear()} Tini-Tiny Labs</p>
 					</div>

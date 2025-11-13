@@ -1,30 +1,35 @@
 // Sidebar.jsx
 import React, { useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { routesConfig } from "./routesConfig";
+import "./Sidebar.css"; // Make sure this CSS file exists
 
 export default function Sidebar({ open, onClose, ThemeToggle, theme, onToggleTheme }) {
 	const loc = useLocation();
 	const panelRef = useRef(null);
 	const firstLinkRef = useRef(null);
 
-	// Close on route change (safety; AppShell also auto-closes)
-	useEffect(() => { if (open) onClose(); /* eslint-disable-next-line */ }, [loc.pathname]);
+	// Auto-close sidebar on route change
+	useEffect(() => {
+		if (open) onClose();
+		// eslint-disable-next-line
+	}, [loc.pathname]);
 
-	// ESC to close
+	// ESC key to close
 	useEffect(() => {
 		if (!open) return;
-		const onKey = (e) => { if (e.key === "Escape") onClose(); };
+		const onKey = (e) => e.key === "Escape" && onClose();
 		window.addEventListener("keydown", onKey);
 		return () => window.removeEventListener("keydown", onKey);
 	}, [open, onClose]);
 
-	// Focus management: when opening, move focus into the panel
+	// Focus first link or panel when opening
 	useEffect(() => {
-		if (open) {
-			// prefer first nav link; fall back to panel
-			(firstLinkRef.current || panelRef.current)?.focus();
-		}
+		if (open) (firstLinkRef.current || panelRef.current)?.focus();
 	}, [open]);
+
+	// Only routes flagged for sidebar
+	const navRoutes = routesConfig.filter(r => r.showInSidebar);
 
 	return (
 		<>
@@ -38,6 +43,7 @@ export default function Sidebar({ open, onClose, ThemeToggle, theme, onToggleThe
 				ref={panelRef}
 				tabIndex={-1}
 			>
+				{/* Header */}
 				<div className="sidebarHeader">
 					<NavLink to="/homework" className="brandLink" aria-label="Tini-Tiny Labs home">
 						<span className="brandBadge">
@@ -54,23 +60,31 @@ export default function Sidebar({ open, onClose, ThemeToggle, theme, onToggleThe
 						<h1 className="brandText">Tini-Tiny Labs</h1>
 					</NavLink>
 				</div>
+
+				{/* Navigation Links */}
 				<div className="sidebarInner">
 					<nav className="sidebarNav" aria-label="Primary">
-						<NavLink to="/homework" end className="sidebarLink" ref={firstLinkRef} onClick={onClose}>
-							Home
-						</NavLink>
-						<NavLink to="/homework/mathematics" className="sidebarLink" onClick={onClose}>
-							Mathematics
-						</NavLink>
-						<NavLink to="/homework/wordscramble" className="sidebarLink" onClick={onClose}>
-							Word Scramble
-						</NavLink>
-						<NavLink to="/homework/feedback" className="sidebarLink" onClick={onClose}>
-							Feedback
-						</NavLink>
+						{navRoutes.map((route, idx) => (
+							<NavLink
+								key={route.path}
+								to={route.path}
+								end={route.path === "/homework"}
+								className="sidebarLink"
+								ref={idx === 0 ? firstLinkRef : null}
+								onClick={onClose}
+							>
+								{route.icon && (
+									<span className="sidebarIcon">
+										{typeof route.icon === "string" ? route.icon : <route.icon />}
+									</span>
+								)}
+								<span className="sidebarText">{route.label}</span>
+							</NavLink>
+						))}
 					</nav>
 				</div>
 
+				{/* Footer */}
 				<div className="sidebarFooter">
 					<span style={{ opacity: 0.8, fontWeight: 700, fontSize: 14 }}>Theme</span>
 					<ThemeToggle theme={theme} onToggle={onToggleTheme} />

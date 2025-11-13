@@ -1,0 +1,28 @@
+.sidebarLink {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem; 
+	padding: 0.5rem 1rem;
+	text-decoration: none;
+	font-weight: 500;
+	color: var(--sidebar-text, #e5e7eb);
+	border-radius: 0.5rem;
+	transition: background 0.2s;
+}
+
+.sidebarLink:hover,
+.sidebarLink.active {
+	background: var(--sidebar-hover-bg, rgba(255, 255, 255, 0.1));
+}
+
+.sidebarIcon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.3rem;
+	min-width: 1.5rem;
+}
+
+.sidebarText {
+	flex: 1;
+}
