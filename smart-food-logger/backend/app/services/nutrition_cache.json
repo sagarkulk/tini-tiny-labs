@@ -1,0 +1,15 @@
+{
+  "1 slice of pizza": {
+    "nutrition": {
+      "calories": 285,
+      "protein": 12.0,
+      "carbs": 33.0,
+      "fat": 12.0,
+      "micros": {
+        "iron": 1.3,
+        "calcium": 215.0
+      }
+    },
+    "cached_at": "2025-12-23T02:32:47.350163Z"
+  }
+}

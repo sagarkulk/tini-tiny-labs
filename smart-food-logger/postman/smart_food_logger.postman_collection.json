@@ -1,0 +1,172 @@
+{
+  "info": {
+    "name": "Smart Food Logger API",
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-1234567890ef",
+    "description": "Postman collection for Smart Food Logger backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Estimate Nutrition",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"food_text\": \"1 slice of pizza\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/estimate?use_ai=true",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["estimate"],
+          "query": [
+            {"key": "use_ai", "value": "true"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Daily Food Log",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/daily/log?user_id={{user_id}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["daily", "log"],
+          "query": [
+            {"key": "user_id", "value": "{{user_id}}"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Add Food Entry",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"food_text\": \"2 boiled eggs\",\n  \"food_type\": \"breakfast\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/daily/add?user_id={{user_id}}&use_ai=true",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["daily", "add"],
+          "query": [
+            {"key": "user_id", "value": "{{user_id}}"},
+            {"key": "use_ai", "value": "true"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Remove Food Entry",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/daily/remove/0?user_id={{user_id}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["daily", "remove", "0"],
+          "query": [
+            {"key": "user_id", "value": "{{user_id}}"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update Config",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"total_calories_allowed\": 2200,\n  \"allowed_basic_foods\": [\"egg\", \"chicken\", \"rice\"]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/daily/config?user_id={{user_id}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["daily", "config"],
+          "query": [
+            {"key": "user_id", "value": "{{user_id}}"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Recipe Suggestions",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/daily/recipes?user_id={{user_id}}&food_type=breakfast&max_calories=500&use_ai=true",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["daily", "recipes"],
+          "query": [
+            {"key": "user_id", "value": "{{user_id}}"},
+            {"key": "food_type", "value": "breakfast"},
+            {"key": "max_calories", "value": "500"},
+            {"key": "use_ai", "value": "true"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Cached Nutrition",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/ai/cache?food_text=2%20boiled%20eggs",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["ai", "cache"],
+          "query": [
+            {"key": "food_text", "value": "2 boiled eggs"}
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "user_id",
+      "value": "YOUR-GUID-HERE",
+      "type": "string"
+    }
+  ]
+}

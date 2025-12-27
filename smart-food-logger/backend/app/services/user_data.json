@@ -1,0 +1,102 @@
+{
+  "user-guid-1": {
+    "last_active": "2025-12-21",
+    "config": {
+      "total_calories_allowed": 2000,
+      "allowed_basic_foods": [
+        "egg",
+        "chicken",
+        "rice"
+      ]
+    },
+    "food_log": [
+      {
+        "food_text": "Egg Omelet",
+        "food_type": "breakfast",
+        "nutrition": {
+          "calories": 250,
+          "protein": 15.0,
+          "carbs": 5.0,
+          "fat": 18.0,
+          "micros": {}
+        },
+        "used_ai": true
+      }
+    ]
+  },
+  "d121ff2e-c41a-44fb-8611-08b8570036e1": {
+    "last_active_date": "2025-12-23",
+    "config": {
+      "total_calories_allowed": 2200,
+      "allowed_basic_foods": [
+        "egg",
+        "chicken",
+        "rice",
+        "fruits"
+      ]
+    },
+    "food_log": [
+      {
+        "food_text": "2 boiled eggs",
+        "food_type": "breakfast",
+        "nutrition": {
+          "calories": 155,
+          "protein": 12.6,
+          "carbs": 1.1,
+          "fat": 10.6,
+          "micros": {
+            "iron": 1.6,
+            "calcium": 56.0
+          }
+        },
+        "used_ai": true,
+        "date": "2025-12-23"
+      },
+      {
+        "food_text": "2 boiled eggs",
+        "food_type": "breakfast",
+        "nutrition": {
+          "calories": 155,
+          "protein": 12.6,
+          "carbs": 1.1,
+          "fat": 10.6,
+          "micros": {
+            "iron": 1.6,
+            "calcium": 56.0
+          }
+        },
+        "used_ai": true,
+        "date": "2025-12-23"
+      },
+      {
+        "food_text": "2 boiled eggs",
+        "food_type": "breakfast",
+        "nutrition": {
+          "calories": 155,
+          "protein": 12.6,
+          "carbs": 1.1,
+          "fat": 10.6,
+          "micros": {
+            "iron": 1.6,
+            "calcium": 56.0
+          },
+          "from_cache": true
+        },
+        "used_ai": true,
+        "date": "2025-12-23"
+      }
+    ]
+  },
+  "YOUR-GUID-HERE": {
+    "last_active_date": "2025-12-23",
+    "config": {
+      "total_calories_allowed": 2200,
+      "allowed_basic_foods": [
+        "egg",
+        "chicken",
+        "rice"
+      ]
+    },
+    "food_log": []
+  }
+}
