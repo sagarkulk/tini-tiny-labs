@@ -1,0 +1,121 @@
+import requests
+import pandas as pd
+from typing import List, Dict
+import time
+
+API_KEY = "DaS1wQSBp02Zj2GETiAmnKegsyxHAAGg"
+BASE_URL = "https://financialmodelingprep.com/stable"
+
+# -------------------------
+# Helper function for GET requests
+# -------------------------
+def fetch_json(url: str) -> dict:
+    try:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        return resp.json()
+    except Exception as e:
+        print(f"Error fetching {url}: {e}")
+        return {}
+
+# -------------------------
+# ETF Holdings
+# -------------------------
+def get_etf_holdings(etfs: List[str]) -> Dict[str, pd.DataFrame]:
+    result = {}
+    for etf in etfs:
+        url = f"{BASE_URL}/etf-holder/{etf}?apikey={API_KEY}"
+        data = fetch_json(url)
+        print(f"Raw data for {etf}:", data)
+        if not data:
+            result[etf] = pd.DataFrame(columns=["ticker", "weight"])
+            continue
+
+        df = pd.DataFrame(data)
+        if "asset" not in df.columns or "weightPercentage" not in df.columns:
+            df = pd.DataFrame(columns=["ticker", "weight"])
+        else:
+            df = df[["asset", "weightPercentage"]]
+            df.columns = ["ticker", "weight"]
+            df["weight"] = df["weight"].fillna(0) / 100
+        result[etf] = df
+        time.sleep(0.1)  # polite delay to avoid rate limits
+    return result
+
+# -------------------------
+# Stock Sector
+# -------------------------
+def get_stock_sector(tickers: List[str]) -> Dict[str, str]:
+    result = {}
+    for ticker in tickers:
+        url = f"{BASE_URL}/profile/{ticker}?apikey={API_KEY}"
+        data = fetch_json(url)
+        if not data or not isinstance(data, list):
+            result[ticker] = "Unknown"
+        else:
+            result[ticker] = data[0].get("sector", "Unknown")
+        time.sleep(0.1)
+    return result
+
+# -------------------------
+# Stock Quote (real-time)
+# -------------------------
+def get_stock_quote(tickers: List[str]) -> Dict[str, dict]:
+    result = {}
+    url = f"{BASE_URL}/quote/{','.join(tickers)}?apikey={API_KEY}"
+    data = fetch_json(url)
+    if isinstance(data, list):
+        for item in data:
+            symbol = item.get("symbol")
+            result[symbol] = item
+    return result
+
+# -------------------------
+# Company Profile
+# -------------------------
+def get_company_profile(tickers: List[str]) -> Dict[str, dict]:
+    result = {}
+    for ticker in tickers:
+        url = f"{BASE_URL}/profile/{ticker}?apikey={API_KEY}"
+        data = fetch_json(url)
+        if data and isinstance(data, list):
+            result[ticker] = data[0]
+        else:
+            result[ticker] = {}
+        time.sleep(0.1)
+    return result
+
+# -------------------------
+# Historical Price
+# -------------------------
+def get_historical_price(ticker: str, period: str = "1y") -> pd.DataFrame:
+    """
+    period can be '1y', '6m', '1m', or a date range like '2025-01-01/2025-12-31'
+    """
+    url = f"{BASE_URL}/historical-price-full/{ticker}?apikey={API_KEY}"
+    data = fetch_json(url)
+    if not data or "historical" not in data:
+        return pd.DataFrame()
+    df = pd.DataFrame(data["historical"])
+    df = df.sort_values("date")
+    return df
+
+# -------------------------
+# Available ETFs
+# -------------------------
+def get_etf_list() -> List[str]:
+    url = f"{BASE_URL}/etf-list?apikey={API_KEY}"
+    data = fetch_json(url)
+    if not data:
+        return []
+    return [item.get("symbol") for item in data if "symbol" in item]
+
+# -------------------------
+# Available Stocks
+# -------------------------
+def get_stock_list() -> List[str]:
+    url = f"{BASE_URL}/stock-list?apikey={API_KEY}"
+    data = fetch_json(url)
+    if not data:
+        return []
+    return [item.get("symbol") for item in data if "symbol" in item]

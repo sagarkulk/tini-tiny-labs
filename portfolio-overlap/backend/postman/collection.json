@@ -1,0 +1,131 @@
+{
+  "info": {
+    "name": "Portfolio Overlap API",
+    "_postman_id": "12345-portfolio-overlap",
+    "description": "Test endpoints with dynamic data source using ?source=mock|api|scraping",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {"raw": "http://localhost:8000/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": [""]}
+      }
+    },
+    {
+      "name": "ETF Holdings",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"etfs\": [\"SPY\", \"QQQ\"]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/etf/holdings?source=mock",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["etf","holdings"],
+          "query": [{"key": "source", "value": "mock"}]
+        }
+      }
+    },
+    {
+      "name": "Stock Sector",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"tickers\": [\"AAPL\", \"MSFT\"]\n}"},
+        "url": {
+          "raw": "http://localhost:8000/stock/sector?source=mock",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["stock","sector"],
+          "query": [{"key": "source", "value": "mock"}]
+        }
+      }
+    },
+    {
+      "name": "Stock Quote",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"tickers\": [\"AAPL\", \"GOOG\"]\n}"},
+        "url": {
+          "raw": "http://localhost:8000/stock/quote?source=mock",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["stock","quote"],
+          "query": [{"key": "source", "value": "mock"}]
+        }
+      }
+    },
+    {
+      "name": "Company Profile",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"tickers\": [\"AAPL\"]\n}"},
+        "url": {
+          "raw": "http://localhost:8000/company/profile?source=mock",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["company","profile"],
+          "query": [{"key": "source", "value": "mock"}]
+        }
+      }
+    },
+    {
+      "name": "Historical Price",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"ticker\": \"AAPL\",\n  \"period\": \"1y\"\n}"},
+        "url": {
+          "raw": "http://localhost:8000/historical-price?source=mock",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["historical-price"],
+          "query": [{"key": "source", "value": "mock"}]
+        }
+      }
+    },
+    {
+      "name": "ETF List",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/etf/list?source=mock",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["etf","list"],
+          "query": [{"key": "source", "value": "mock"}]
+        }
+      }
+    },
+    {
+      "name": "Stock List",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/stock/list?source=mock",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["stock","list"],
+          "query": [{"key": "source", "value": "mock"}]
+        }
+      }
+    }
+  ]
+}

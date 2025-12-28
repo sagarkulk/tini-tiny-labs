@@ -1,0 +1,49 @@
+{
+  "etf_holdings": {
+    "SPY": [
+      {"ticker": "AAPL", "weight": 0.07},
+      {"ticker": "MSFT", "weight": 0.06},
+      {"ticker": "AMZN", "weight": 0.03},
+      {"ticker": "GOOG", "weight": 0.03},
+      {"ticker": "TSLA", "weight": 0.02}
+    ],
+    "QQQ": [
+      {"ticker": "AAPL", "weight": 0.13},
+      {"ticker": "MSFT", "weight": 0.11},
+      {"ticker": "GOOG", "weight": 0.08},
+      {"ticker": "AMZN", "weight": 0.06},
+      {"ticker": "TSLA", "weight": 0.05}
+    ]
+  },
+  "stock_sectors": {
+    "AAPL": "Technology",
+    "MSFT": "Technology",
+    "GOOG": "Communication Services",
+    "AMZN": "Consumer Discretionary",
+    "TSLA": "Consumer Discretionary"
+  },
+  "stock_quotes": {
+    "AAPL": {"open": 150, "high": 155, "low": 148, "close": 152, "volume": 1000000},
+    "MSFT": {"open": 300, "high": 310, "low": 295, "close": 305, "volume": 800000},
+    "GOOG": {"open": 2800, "high": 2850, "low": 2750, "close": 2825, "volume": 500000},
+    "AMZN": {"open": 3500, "high": 3550, "low": 3450, "close": 3525, "volume": 600000},
+    "TSLA": {"open": 700, "high": 720, "low": 690, "close": 710, "volume": 1200000}
+  },
+  "company_profiles": {
+    "AAPL": {"name": "Apple Inc.", "industry": "Technology", "sector": "Technology", "marketCap": 2e12, "website": "https://www.apple.com", "exchange": "NASDAQ"},
+    "MSFT": {"name": "Microsoft Corp.", "industry": "Technology", "sector": "Technology", "marketCap": 2.5e12, "website": "https://www.microsoft.com", "exchange": "NASDAQ"},
+    "GOOG": {"name": "Alphabet Inc.", "industry": "Communication Services", "sector": "Communication Services", "marketCap": 1.8e12, "website": "https://www.abc.xyz", "exchange": "NASDAQ"},
+    "AMZN": {"name": "Amazon.com Inc.", "industry": "Consumer Discretionary", "sector": "Consumer Discretionary", "marketCap": 1.6e12, "website": "https://www.amazon.com", "exchange": "NASDAQ"},
+    "TSLA": {"name": "Tesla Inc.", "industry": "Consumer Discretionary", "sector": "Consumer Discretionary", "marketCap": 800e9, "website": "https://www.tesla.com", "exchange": "NASDAQ"}
+  },
+  "historical_prices": {
+    "AAPL": [
+      {"date": "2025-12-23", "open": 150, "high": 155, "low": 148, "close": 152, "volume": 1000000},
+      {"date": "2025-12-24", "open": 152, "high": 156, "low": 150, "close": 154, "volume": 1200000}
+    ],
+    "MSFT": [
+      {"date": "2025-12-23", "open": 300, "high": 310, "low": 295, "close": 305, "volume": 800000},
+      {"date": "2025-12-24", "open": 305, "high": 312, "low": 302, "close": 310, "volume": 900000}
+    ]
+  }
+}
